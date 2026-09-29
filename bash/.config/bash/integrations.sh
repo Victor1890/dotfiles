@@ -35,7 +35,9 @@ fi
 # ---- NVM (Node Version Manager) ----
 # La instalación la hace scripts/bootstrap.sh (ensure_node); aquí solo se carga.
 export NVM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nvm"
+set -h  # nvm llama a `hash -r`; Omarchy deja hashing off (set +h) y bash avisa
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                 # This loads nvm
+set +h  # restaurar (Omarchy: mise)
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # ---- PHP Brew ----
