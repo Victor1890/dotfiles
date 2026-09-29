@@ -3,9 +3,9 @@ git
 stow
 bash
 bash-completion
-fastfetch
-curl
-eza
+# fastfetch
+# curl
+# eza
 # en Arch el paquete y el binario se llaman fd
 fd
 fzf
@@ -16,26 +16,25 @@ zoxide
 net-tools
 bat
 unzip
-cmatrix
+# cmatrix
 # equivalente a build-essential (compilador para treesitter)
 base-devel
 # requisito de cualquier módulo dkms (xone, etc.)
 linux-headers
-xclip
-wl-clipboard
+# xclip
+# wl-clipboard
 fontconfig
 # en repos oficiales con versión actual; en Omarchy ya presentes (--needed los salta)
 lazygit
-neovim
+# neovim
 # deps opcionales de CoolerControl (Kraken) + soporte i2c para el RGB de RAM/placa (OpenRGB)
-liquidctl
+# liquidctl
 lm_sensors
 i2c-tools
 # jq parsea la API de CoolerControl (coolercontrol-provision)
 jq
-nginx
 btop
 dua-cli
 inxi
 lazydocker
-yt-dlp
+# yt-dlp

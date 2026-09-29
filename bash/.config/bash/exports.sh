@@ -27,6 +27,9 @@ setup_locale 2>/dev/null
 export EDITOR='nvim'
 export VISUAL='nvim'
 
+# GPG (firma de commits, etc.)
+export GPG_TTY="$(tty 2>/dev/null || true)"
+
 # Colors for ls and completion
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad  # macOS/BSD

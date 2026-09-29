@@ -7,7 +7,7 @@ alias vim='nvim'
 alias vi='nvim'
 alias v='nvim'
 alias sudo='sudo '
-alias c='clear'
+# alias c='clear'
 
 # Bash shortcuts
 alias rbash='source ~/.bashrc'

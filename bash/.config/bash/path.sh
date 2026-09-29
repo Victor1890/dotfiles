@@ -30,3 +30,10 @@ fi
 
 export PNPM_HOME="$HOME/.local/share/pnpm"
 [[ -d "$PNPM_HOME" ]] && export PATH="$PNPM_HOME/bin:$PATH"
+
+# ============================================================================
+# BUN
+# ============================================================================
+
+export BUN_INSTALL="$HOME/.bun"
+[[ -d "$BUN_INSTALL" ]] && export PATH="$BUN_INSTALL/bin:$PATH"

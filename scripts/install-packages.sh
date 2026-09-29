@@ -121,6 +121,7 @@ install_macos() {
     "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc || true
   fi
 
+  ensure_bun
   ensure_bash_installed
 }
 
@@ -266,6 +267,18 @@ ensure_mise() {
   curl -fsSL https://mise.run | sh || log "Fallo al instalar mise; omitiendo."
 }
 
+# bun (runtime/gestor JS) no está en apt/dnf/pacman; el instalador oficial
+# funciona igual en cualquier distro y no pide sudo (instala en ~/.bun).
+# PATH lo añade bash/.config/bash/path.sh (BUN_INSTALL).
+ensure_bun() {
+  if exists bun; then
+    log "bun ya instalado ($(bun --version 2>/dev/null)); se omite."
+    return 0
+  fi
+  log "Instalando bun…"
+  curl -fsSL https://bun.sh/install | bash || log "Fallo al instalar bun; omitiendo."
+}
+
 # apt solo trae Neovim 0.9.x; LazyVim necesita >= 0.11.2. Instala el tarball
 # oficial en /opt y lo enlaza a /usr/local/bin (que precede a /usr/bin en PATH).
 ensure_neovim() {
@@ -403,6 +416,7 @@ install_ubuntu() {
   install_claude_code
   ensure_neovim
   ensure_mise
+  ensure_bun
   ensure_nerd_font
 
   ensure_bash_installed
@@ -438,6 +452,7 @@ install_fedora() {
   install_lazydocker
   ensure_neovim
   ensure_mise
+  ensure_bun
   ensure_nerd_font
 
   ensure_bash_installed
@@ -621,6 +636,7 @@ install_arch() {
   fi
 
   ensure_nerd_font
+  ensure_bun
 
   ensure_bash_installed
 
