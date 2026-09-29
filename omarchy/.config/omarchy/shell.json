@@ -7,7 +7,7 @@
           "id": "omarchy.indicators"
         },
         {
-          "birthYear": 1996,
+          "birthYear": 1999,
           "format": "ddd d MMM HH:mm",
           "formatAlt": "d MMMM 'W'ww yyyy",
           "id": "omarchy.clock",
@@ -67,17 +67,5 @@
     "lock": 300,
     "screensaver": 150
   },
-  "plugins": [
-    {
-      "id": "io.github.sirjul1337.lock-explorer",
-      "design": "sheet"
-    }
-  ],
-  "version": 1,
-  "disabledPlugins": [
-    "omarchy.lock"
-  ],
-  "cloneSourceRestores": [
-    "io.github.sirjul1337.lock-explorer"
-  ]
+  "version": 1
 }
