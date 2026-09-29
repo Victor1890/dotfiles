@@ -111,9 +111,16 @@
     "command": "bash \"$HOME/.claude/hooks/statusline.sh\""
   },
   "enabledPlugins": {
-    "cloudflare@cloudflare": true
+    "cloudflare@cloudflare": true,
+    "caveman@caveman": true
   },
   "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
     "cloudflare": {
       "source": {
         "source": "github",

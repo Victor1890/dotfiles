@@ -261,6 +261,11 @@ directories sit in `~/.claude/skills-disabled/`.
 tracker, triage labels, `docs/agents/`); `code-review` and `triage` need it.
 Re-enable a single one with `mv ~/.claude/skills-disabled/<skill> ~/.claude/skills/`.
 
+`ponytail` comes from the manifest. `caveman` is the opposite: it is declared as a plugin
+(`caveman@caveman` in `enabledPlugins` + `extraKnownMarketplaces` in `settings.json`) because
+the plugin brings the mode hooks and statusline badge. Don't also add `JuliusBrussee/caveman` to
+`packages/claude-skills.txt`, or its skills are listed twice.
+
 To re-measure after adding or removing skills:
 
 ```sh
