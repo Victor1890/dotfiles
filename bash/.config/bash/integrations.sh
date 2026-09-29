@@ -1,9 +1,6 @@
 # ============================================================================
 # SHELL INTEGRATIONS
 # ============================================================================
-# Puerto de zsh/.config/zsh/integrations.zsh (--zsh → --bash, .zsh → .bash,
-# init zsh → init bash donde aplica).
-
 # macOS iTerm2 integration
 if [[ $OSTYPE == darwin* ]]; then
   test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
@@ -45,7 +42,6 @@ export NVM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nvm"
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
 # ---- STARSHIP -----
-# Unificado con zsh (ver zsh/.config/zsh/plugins.zsh): mismo prompt en ambos
-# shells. Se instala solo si falta (ver plugins.sh).
+# Se instala solo si falta (ver plugins.sh).
 _bde_ensure_starship
 command -v starship >/dev/null 2>&1 && eval "$(starship init bash)"

@@ -1,9 +1,6 @@
 # ============================================================================
 # LOCALE
 # ============================================================================
-# Puerto directo de zsh/.config/zsh/exports.zsh — este bloque es POSIX/bash
-# puro, sin ajustes.
-
 setup_locale() {
   # locale -a spells UTF-8 locales as "c.utf8"/"en_us.utf8"; normalize both
   # sides (lowercase, drop dashes) so our candidates actually match.

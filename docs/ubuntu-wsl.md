@@ -39,7 +39,7 @@ This installs the apt packages from [`packages/apt-cli.txt`](../packages/apt-cli
 (which includes `gh`, skipped automatically on older Ubuntu releases where it has
 no apt candidate), installs tools that aren't in apt (e.g. lazygit from its GitHub
 release and Claude Code via its official installer), stows the config packages,
-sets bash as the default shell (zsh stays available: `./scripts/switch-shell.sh zsh`), and—on WSL—copies `.wslconfig` to your Windows user
+sets bash as the default shell, and—on WSL—copies `.wslconfig` to your Windows user
 profile.
 
 Open a new terminal (or `exec bash`) to load everything.
@@ -68,4 +68,4 @@ config), see [windows-host.md](windows-host.md).
 
 - `fd` and `bat` are installed as `fdfind`/`batcat` on Ubuntu; the bootstrap adds
   `fd`/`bat` convenience symlinks.
-- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash zsh git p10k starship nvim tmux shell lazygit`.
+- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim tmux shell lazygit`.

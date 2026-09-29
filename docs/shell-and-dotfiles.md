@@ -2,44 +2,13 @@
 
 How the shell is set up and how these dotfiles are applied.
 
-## zsh
-
-zsh is the **alternative** shell (the default is [bash](#bash)). It stays fully
-configured and installed by the bootstrap; switch to it with
-`./scripts/switch-shell.sh zsh` (see [Switching your login shell](#switching-your-login-shell)).
-
-The configuration is **modular**: `~/.zshrc` is a slim loader that sources
-focused files from `~/.config/zsh/`:
-
-| Module | Responsibility |
-|--------|----------------|
-| `exports.zsh` | locale + environment variables |
-| `path.zsh` | Homebrew + `PATH` |
-| `plugins.zsh` | zinit, plugins, Oh-My-Zsh snippets, prompt theme |
-| `completion.zsh` | `compinit` + completion styling |
-| `history.zsh` | history options |
-| `keybindings.zsh` | key bindings |
-| `aliases.zsh` | aliases (git, eza, bat, docker, `lzg`, …) |
-| `functions.zsh` | utility functions (`ex`, `mkcd`, `glog`, …) |
-| `integrations.zsh` | fzf, zoxide, nvm, fastfetch, … |
-
-Plugins are managed by [zinit](https://github.com/zdharma-continuum/zinit) and
-auto-install on first launch. **The prompt is [Starship](https://starship.rs)**
-(see below) — Powerlevel10k stays installed as an untouched rollback path:
-`p10k/.p10k.zsh` and the `zinit light romkatv/powerlevel10k` line in
-`plugins.zsh` are kept, just commented out. To go back, uncomment both and the
-p10k instant-prompt block in `.zshrc`.
-
 ## bash
 
-bash is the **default login shell**: `bootstrap.sh`/`install-packages.sh`
-install it (Homebrew's modern bash on macOS) and `chsh` to it. zsh is never
-touched and stays available as a one-keystroke fallback (`exec zsh`) or a
-permanent switch (see [Switching your login shell](#switching-your-login-shell)
-below).
+bash is the **only supported login shell**: `bootstrap.sh`/`install-packages.sh`
+install it (Homebrew's modern bash on macOS) and `chsh` to it.
 
-Same modular pattern as zsh: `~/.bashrc` is a slim loader that sources focused
-files from `~/.config/bash/`:
+The configuration is **modular**: `~/.bashrc` is a slim loader that sources
+focused files from `~/.config/bash/`:
 
 | Module | Responsibility |
 |--------|----------------|
@@ -49,32 +18,33 @@ files from `~/.config/bash/`:
 | `completion.sh` | bash-completion + related `shopt` |
 | `history.sh` | history options (`shopt`/`HISTCONTROL`, live-shared history) |
 | `git.sh` | puerto del plugin git de OMZ (`gco`, `gfo`, `ggp`…; generado desde `OMZP::git`) |
-| `aliases.sh` | aliases (same set as zsh, minus the zsh-only suffix aliases) |
-| `functions.sh` | utility functions (same as zsh's `functions.zsh`, portable as-is) |
+| `aliases.sh` | aliases (git, eza, bat, docker, `lzg`, …) |
+| `functions.sh` | utility functions (`ex`, `mkcd`, `glog`, …) |
 | `integrations.sh` | fzf, zoxide, nvm, phpbrew, Starship init |
 
 Keybindings live in `bash/.inputrc` (readline, not bash-only — the same
 bindings apply to any readline program: `psql`, `python3 -i`, etc.).
 
+**On Omarchy**, `.bashrc` also sources Omarchy's own `env-bootstrap` and
+`default/bash/rc` (its stock aliases/functions/`OMARCHY_PATH`) *before* the
+module loader above, so this repo's modules override anything with the same
+name without losing the rest of Omarchy's defaults. No-op on other platforms
+(the Omarchy paths just don't exist).
+
 **Interactive features**, installed automatically the first time a new bash
-shell starts (same self-install pattern zinit uses for zsh — a cheap check,
-install only if missing):
+shell starts (a cheap check, install only if missing):
 - [ble.sh](https://github.com/akinomyoga/ble.sh) — autosuggestions + real-time
-  syntax highlighting (the bash equivalent of zsh-autosuggestions +
-  zsh-syntax-highlighting combined). Must stay sourced near the very top of
-  `.bashrc` and attached (`ble-attach`) as the very last line — don't reorder
-  `.bashrc` without keeping that invariant.
+  syntax highlighting. Must stay sourced near the very top of `.bashrc` and
+  attached (`ble-attach`) as the very last line — don't reorder `.bashrc`
+  without keeping that invariant.
 - [Starship](https://starship.rs) — see below.
 - `bash-completion` is a real system package (`packages/*.txt`), not
   self-installed; `completion.sh` just sources it.
 
-Not ported (no direct bash equivalent, low value relative to the effort):
-zsh's suffix aliases (`alias -s md=code`) and the `zsh-you-should-use` plugin.
-A subset of the Oh-My-Zsh snippets `plugins.zsh` loads for zsh (sudo's
-Esc-Esc-prepend and colored man pages) was hand-ported; the rest
-(`command-not-found`, `node`, `pm2`, `bun`) was skipped as low-value/platform-specific
-— `command_not_found_handle` in `functions.sh` degrades gracefully outside
-Ubuntu/Debian.
+A subset of the Oh-My-Zsh snippets (sudo's Esc-Esc-prepend and colored man
+pages) was hand-ported; `command-not-found`, `node`, `pm2`, `bun` were skipped
+as low-value/platform-specific — `command_not_found_handle` in `functions.sh`
+degrades gracefully outside Ubuntu/Debian.
 
 ### macOS bash version
 
@@ -82,35 +52,15 @@ macOS ships `/bin/bash` 3.2 (frozen since 2007 over licensing). `ensure_bash_ins
 in `scripts/install-packages.sh` installs a modern bash via Homebrew instead —
 same pattern already used for Homebrew itself in `path.sh`.
 
-## Starship (shared prompt)
+## Starship (prompt)
 
-[Starship](https://starship.rs) is the single prompt config for **both** zsh
-and bash, configured in `starship/.config/starship.toml` (its own Stow
-package, same idea as `p10k/`). It self-installs the same way ble.sh does —
-no manual step needed.
+[Starship](https://starship.rs) is the prompt, configured in
+`starship/.config/starship.toml` (its own Stow package). It self-installs the
+same way ble.sh does — no manual step needed.
 
-**Prompt colors:** like `p10k/.p10k.zsh`, `starship.toml` uses ANSI indices
-**0-15** (`fg:4`, `fg:2`, …) on purpose, not hex/256-color values, so the
-prompt follows whatever palette the terminal defines instead of hardcoding a
-theme.
-
-## Switching your login shell
-
-The bootstrap (`ensure_bash_installed()` in `install-packages.sh`) sets bash as
-your login shell on every run; `ensure_zsh()` only installs zsh and registers
-it in `/etc/shells`. So if you switch to zsh permanently, re-running the
-bootstrap will `chsh` back to bash — run `switch-shell.sh zsh` again after it.
-To alternate by hand:
-
-```sh
-./scripts/switch-shell.sh zsh    # or: bash, to go back to the default
-```
-
-This registers the target shell in `/etc/shells` if needed, runs `chsh`, and
-on Omarchy also re-pins `shell=` in `~/.config/foot/foot.ini` (foot inherits
-the frozen `$SHELL` from the uwsm/Hyprland session, not `/etc/passwd` — see
-`ensure_omarchy_shell()` in `install-packages.sh`). tmux's `default-command`
-is `bash` (see `tmux.conf`) independently of your login shell.
+**Prompt colors:** `starship.toml` uses ANSI indices **0-15** (`fg:4`, `fg:2`,
+…) on purpose, not hex/256-color values, so the prompt follows whatever
+palette the terminal defines instead of hardcoding a theme.
 
 ## Applying the dotfiles
 
@@ -131,11 +81,11 @@ Or link packages manually:
 
 ```sh
 cd ~/dotfiles
-stow --no-folding zsh bash git p10k starship nvim tmux herdr shell lazygit claude   # link everything
+stow --no-folding bash git starship nvim tmux herdr shell lazygit claude   # link everything
 stow --no-folding omarchy                                             # Omarchy only
 stow --no-folding nvim                                                # just one package
 stow -D nvim                                                          # unlink
-stow -R --no-folding zsh                                              # restow after changes
+stow -R --no-folding bash                                             # restow after changes
 ```
 
 `--no-folding` matches what the bootstrap does: it links every file individually instead of
@@ -156,7 +106,7 @@ Find every package file that is no longer a link to the repo:
 
 ```sh
 cd ~/dotfiles
-for pkg in zsh bash git p10k starship nvim tmux herdr shell lazygit claude omarchy; do
+for pkg in bash git starship nvim tmux herdr shell lazygit claude omarchy; do
   [ -d "$pkg" ] || continue
   find "$pkg" -type f | while read -r f; do
     t="$HOME/${f#$pkg/}"

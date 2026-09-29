@@ -22,9 +22,7 @@ for module in "${ROOT_DIR}"/scripts/modules/*.sh; do
   source "${module}"
 done
 
-# Mensaje final sobre cómo entrar a bash (shell por defecto). NO sugerir
-# `source ~/.zshrc` desde bash: es sintaxis zsh y falla línea por línea. zsh
-# sigue disponible como alternativa (./scripts/switch-shell.sh zsh).
+# Mensaje final sobre cómo entrar a bash (único shell soportado).
 final_shell_hint() {
   local login_shell
   login_shell="$(getent passwd "$(id -un)" 2>/dev/null | cut -d: -f7 || true)"
@@ -45,7 +43,6 @@ final_shell_hint() {
       log "Abre una terminal nueva para entrar a bash, o cámbiate ya con: exec bash"
       ;;
   esac
-  log "¿Prefieres zsh? Sigue configurado; cambia con: ./scripts/switch-shell.sh zsh"
 }
 
 main() {

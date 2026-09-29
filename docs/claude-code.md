@@ -11,7 +11,7 @@ run side by side without touching each other.
 | personal (default) | `~/.claude` | `claude` |
 | work | `~/.claude-work` | `ccw`, `claude-profile work`, `nic -p work` |
 
-`claude-profile <name>` (in `zsh/.config/zsh/functions.zsh`) just runs `claude` with
+`claude-profile <name>` (in `bash/.config/bash/functions.sh`) just runs `claude` with
 `CLAUDE_CONFIG_DIR=~/.claude-<name>`. `ccw` / `claude-work` are aliases for the work profile;
 plain `claude` stays on the default dir.
 
@@ -30,7 +30,7 @@ MCP servers can't be symlinked — they live inside each profile's `.claude.json
 To add a profile: append it to `CLAUDE_PROFILES` in both
 `scripts/modules/claude-profiles.sh` and `scripts/install-claude-skills.sh`, re-run the
 bootstrap, add an alias in
-`zsh/.config/zsh/aliases.zsh`, then `claude-profile <name>` → `/login`.
+`bash/.config/bash/aliases.sh`, then `claude-profile <name>` → `/login`.
 
 `/status` shows which account the current session is on — worth checking when several panes are
 open.
@@ -156,7 +156,7 @@ conversation and re-sends it on every tool call — so it gets its own default.
 | Architecture and design | opus | Trade-offs before implementation pay for it |
 | Hard debugging, security | opus | Escalate per session, not by default |
 
-Escalate mid-session with `/model opus`; start there with `cco` (alias in `aliases.zsh`).
+Escalate mid-session with `/model opus`; start there with `cco` (alias in `aliases.sh`).
 `/model` beats `settings.json`, so the floor never blocks anything.
 
 The `statusLine` exists for this: without the active model on screen, sessions stay on whatever

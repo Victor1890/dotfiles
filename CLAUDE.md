@@ -17,7 +17,7 @@ repo entero.
 | Si vas a tocar… | Lee |
 |---|---|
 | Estructura del repo / aplicar dotfiles con Stow | `docs/shell-and-dotfiles.md` |
-| zsh, prompt, aliases o funciones | `docs/shell-and-dotfiles.md` + `zsh/.config/zsh/*.zsh` |
+| bash, prompt, aliases o funciones | `docs/shell-and-dotfiles.md` + `bash/.config/bash/*.sh` |
 | nvim (LazyVim) | `docs/nvim.md` |
 | tmux | `docs/tmux.md` |
 | herdr, `nih` | `docs/herdr.md` |
@@ -35,9 +35,9 @@ repo entero.
 
 - **Config de una herramienta**: su paquete Stow, espejando la ruta de `$HOME`
   (p.ej. `tmux/.config/tmux/tmux.conf`, `git/.gitconfig`).
-- **zsh** (modular): `zsh/.zshrc` es un loader delgado que carga `zsh/.config/zsh/*.zsh`
-  (`exports`, `path`, `plugins`, `completion`, `history`, `keybindings`, `aliases`,
-  `functions`, `integrations`).
+- **bash** (modular): `~/.bashrc` carga `~/.config/bash/*.sh`
+  (`exports`, `path`, `plugins`, `completion`, `history`, `aliases`,
+  `functions`, `integrations`, `git`).
 - **Instalación / enlazado**: `scripts/bootstrap.sh` y los manifiestos `packages/*.txt`.
 
 ## Añadir un paquete Stow nuevo

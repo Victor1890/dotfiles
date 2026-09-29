@@ -1,10 +1,9 @@
 # ============================================================================
 # AUTO-INSTALACIÓN DE HERRAMIENTAS (ble.sh, starship)
 # ============================================================================
-# Mismo patrón que zinit en zsh: en cada arranque de shell se hace un chequeo
-# barato y, si falta algo, se instala una sola vez. bash-completion no vive
-# aquí porque es un paquete del sistema (ver packages/*.txt), no algo con
-# instalador propio.
+# En cada arranque de shell se hace un chequeo barato y, si falta algo, se
+# instala una sola vez. bash-completion no vive aquí porque es un paquete del
+# sistema (ver packages/*.txt), no algo con instalador propio.
 
 _bde_ensure_blesh() {
   local dir="${XDG_DATA_HOME:-$HOME/.local/share}/blesh"

@@ -1,12 +1,11 @@
 # ============================================================================
 # HISTORY CONFIGURATION
 # ============================================================================
-# Puerto de zsh/.config/zsh/history.zsh — setopt no existe en bash, así que se
-# traduce a HISTCONTROL/shopt. "sharehistory" no tiene equivalente 1:1: se
-# imita compartiendo el historial en vivo entre sesiones vía PROMPT_COMMAND.
+# "sharehistory" no tiene equivalente 1:1 en bash: se imita compartiendo el
+# historial en vivo entre sesiones vía PROMPT_COMMAND.
 
 HISTSIZE=5000
-HISTFILE="$HOME/.bash_history"   # separado de ~/.zsh_history a propósito
+HISTFILE="$HOME/.bash_history"
 HISTFILESIZE=$HISTSIZE
 HISTTIMEFORMAT="[%F %T] "
 

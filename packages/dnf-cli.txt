@@ -1,7 +1,6 @@
 # Nombres de paquete de Fedora; sirve para dnf (Fedora) y rpm-ostree (Bazzite).
 git
 stow
-zsh
 bash
 bash-completion
 # fastfetch reemplaza a neofetch (retirado de los repos de Fedora)

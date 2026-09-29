@@ -1,9 +1,6 @@
 # ============================================================================
 # ALIASES
 # ============================================================================
-# Puerto de zsh/.config/zsh/aliases.zsh. Sin los suffix aliases (`alias -s`,
-# feature zsh-only sin equivalente en bash) ni los atajos rzsh/ezsh (ver
-# rbash/ebash abajo).
 
 # Basic utilities
 alias vim='nvim'

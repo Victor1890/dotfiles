@@ -23,10 +23,8 @@ utility/reference dirs, not linked by Stow.
 ```
 dotfiles/
 ├── bash/           # .bashrc + .inputrc + .config/bash/*.sh modules (default shell)
-├── starship/       # .config/starship.toml (prompt shared by bash and zsh)
-├── zsh/            # .zshrc (slim loader) + .config/zsh/*.zsh modules
+├── starship/       # .config/starship.toml (prompt)
 ├── git/            # .gitconfig + .config/git/ignore
-├── p10k/           # .p10k.zsh (Powerlevel10k prompt)
 ├── nvim/           # .config/nvim/ (LazyVim distribution)
 ├── tmux/           # .config/tmux/tmux.conf
 ├── lazygit/        # .config/lazygit/config.yml (terminal UI for git)
@@ -43,9 +41,9 @@ dotfiles/
 └── README.md
 ```
 
-The `zsh` config is modular: `zsh/.zshrc` is a slim loader that sources focused
-files from `~/.config/zsh/` (`exports`, `path`, `plugins`, `completion`,
-`history`, `keybindings`, `aliases`, `functions`, `integrations`). See
+The `bash` config is modular: `~/.bashrc` sources focused files from
+`~/.config/bash/` (`exports`, `path`, `plugins`, `completion`, `history`,
+`aliases`, `functions`, `integrations`). See
 [docs/shell-and-dotfiles.md](docs/shell-and-dotfiles.md).
 
 ## Requirements
@@ -81,7 +79,7 @@ To link (or unlink) individual packages yourself:
 
 ```sh
 cd ~/dotfiles
-stow bash zsh git p10k starship nvim tmux shell lazygit claude   # link everything
+stow bash git starship nvim tmux shell lazygit claude   # link everything
 stow nvim                                    # link just one package
 stow -D nvim                                 # unlink (remove symlinks)
 stow -R bash                                  # restow (refresh) after changes
@@ -108,8 +106,6 @@ location by `scripts/sync-vscode-settings.sh`, and extensions are installed from
 - **WSL `.wslconfig`** is read by Windows from your Windows user profile, not the
   Linux `$HOME`. The bootstrap copies it to `C:\Users\<you>\.wslconfig`; apply
   changes with `wsl --shutdown`.
-- **Powerlevel10k**: regenerate the prompt anytime with `p10k configure` (writes
-  `~/.p10k.zsh`, which is this repo's `p10k/.p10k.zsh`).
 - **lazygit**: launch with `lzg`. See [docs/lazygit.md](docs/lazygit.md).
 
 ## Setup guides
@@ -118,10 +114,10 @@ Step-by-step guides for a fresh machine live in [`docs/`](docs):
 
 | Guide | What it covers |
 |-------|----------------|
-| [shell-and-dotfiles.md](docs/shell-and-dotfiles.md) | zsh modules, prompt, and applying the dotfiles with Stow |
+| [shell-and-dotfiles.md](docs/shell-and-dotfiles.md) | bash modules, prompt, and applying the dotfiles with Stow |
 | [ubuntu-wsl.md](docs/ubuntu-wsl.md) | Ubuntu & WSL2 setup from scratch (incl. `.wslconfig`, fonts) |
 | [bazzite.md](docs/bazzite.md) | Fedora & Bazzite (immutable) setup — dnf / rpm-ostree |
-| [omarchy.md](docs/omarchy.md) | Arch & Omarchy (Hyprland) setup — pacman, default shell (bash), zsh alternative |
+| [omarchy.md](docs/omarchy.md) | Arch & Omarchy (Hyprland) setup — pacman, default shell (bash) |
 | [macos-setup.md](docs/macos-setup.md) | macOS system preferences, apps, Homebrew, iTerm2 |
 | [git-and-ssh.md](docs/git-and-ssh.md) | Git defaults and GitHub SSH key setup |
 | [nodejs.md](docs/nodejs.md) | Node.js via nvm and global modules |

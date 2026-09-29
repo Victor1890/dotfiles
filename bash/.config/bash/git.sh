@@ -1,10 +1,9 @@
 # ============================================================================
 # GIT ALIASES (puerto del plugin git de Oh-My-Zsh, OMZP::git)
 # ============================================================================
-# Mismos aliases/funciones que zsh carga con `zinit snippet OMZP::git`
-# (gco, gst, gfo, gl, gp, ggpush, ...). Los aliases son sintaxis compatible con
-# bash; se omiten los específicos de zsh (gtl, gk, gke) y los condicionados por
-# versión de git (gfa, gpf, gpsupf), que se definen a mano abajo.
+# Mismos aliases/funciones que OMZP::git (gco, gst, gfo, gl, gp, ggpush, ...).
+# Los condicionados por versión de git (gfa, gpf, gpsupf) se definen a mano
+# abajo.
 
 git_current_branch() {
   local ref

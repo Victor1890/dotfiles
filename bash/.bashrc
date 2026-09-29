@@ -23,11 +23,20 @@ BLESH_FILE="${XDG_DATA_HOME:-$HOME/.local/share}/blesh/ble.sh"
 [[ -r "${BLESH_FILE}" ]] && source "${BLESH_FILE}" --noattach
 
 # ============================================================================
+# OMARCHY DEFAULTS (solo Omarchy)
+# ============================================================================
+# env-bootstrap fija OMARCHY_PATH/PATH (necesario incluso en shells no
+# interactivas); default/bash/rc trae los aliases/funciones propios de Omarchy.
+# Se cargan ANTES que los módulos de este repo para que aliases.sh/functions.sh
+# puedan sobreescribir lo que corresponda.
+[[ -r /usr/share/omarchy/default/bash/env-bootstrap ]] && source /usr/share/omarchy/default/bash/env-bootstrap
+[[ -n "${OMARCHY_PATH:-}" && -r "${OMARCHY_PATH}/default/bash/rc" ]] && source "${OMARCHY_PATH}/default/bash/rc"
+
+# ============================================================================
 # MODULE LOADER
 # ============================================================================
-# Configuración partida en módulos bajo ~/.config/bash/, mismo patrón que
-# ~/.config/zsh/ (ver docs/shell-and-dotfiles.md). Se sourcean en orden
-# determinista.
+# Configuración partida en módulos bajo ~/.config/bash/ (ver
+# docs/shell-and-dotfiles.md). Se sourcean en orden determinista.
 
 bash_modules=(
   exports       # locale + environment variables

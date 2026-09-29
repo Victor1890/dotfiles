@@ -1,9 +1,6 @@
 # ============================================================================
 # UTILITY FUNCTIONS
 # ============================================================================
-# Puerto casi literal de zsh/.config/zsh/functions.zsh: nada aquí era
-# zsh-específico (case/for/[[ ]]/(( )) funcionan igual en bash).
-
 ### ARCHIVE EXTRACTION
 # usage: ex <file>
 function ex() {

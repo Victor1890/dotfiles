@@ -34,7 +34,7 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 ```
 
-> Depending on your environment you may need `exec ssh-agent zsh` first.
+> Depending on your environment you may need `exec ssh-agent bash` first.
 
 ### 3. Add the public key to GitHub
 

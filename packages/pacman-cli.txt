@@ -1,7 +1,6 @@
 # Nombres de paquete de Arch Linux (pacman); aplica a Arch y Omarchy.
 git
 stow
-zsh
 bash
 bash-completion
 fastfetch

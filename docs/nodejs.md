@@ -4,7 +4,7 @@ I use [nvm](https://github.com/nvm-sh/nvm) to manage Node.js versions, so I can
 switch versions per project.
 
 > The [bootstrap](../README.md#quick-start-recommended) installs nvm into
-> `~/.config/nvm` (the zsh config loads it from there), so on these dotfiles you
+> `~/.config/nvm` (the bash config loads it from there), so on these dotfiles you
 > usually don't need to install it by hand.
 
 Manual install (check the latest version on the

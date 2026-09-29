@@ -8,7 +8,7 @@ needs (Neovim, a C compiler, `fd`/`ripgrep`/`fzf`, a Nerd Font, …) are
 provisioned differently per package manager, see [Requirements](#requirements)
 below and `scripts/install-packages.sh`.
 
-Launch with `nvim` (or the aliases `vim` / `vi` / `v` from the zsh config). On the
+Launch with `nvim` (or the aliases `vim` / `vi` / `v` from the bash config). On the
 first launch `lazy.nvim` bootstraps itself, installs all plugins and compiles the
 treesitter parsers. The `bootstrap.sh` script also does this headlessly with
 `nvim --headless "+Lazy! install" "+Lazy! restore" +qa`.
@@ -117,7 +117,7 @@ link file by file. Elsewhere, LazyVim's default colorscheme applies.
 ## Tips
 
 - New to vim? `:Tutor`. Discover keymaps live with `<leader>` (which-key popup).
-- IDE cockpit: run `nic [session]` (zsh function) to open a tmux session with
+- IDE cockpit: run `nic [session]` (bash function) to open a tmux session with
   LazyVim and Claude Code side by side; re-attaches if it already exists.
 - Clipboard provider: `xclip`/`wl-clipboard` are installed automatically on
   Linux (built-in on macOS). On WSL the system clipboard goes through

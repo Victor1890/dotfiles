@@ -1,12 +1,10 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Prompt unificado entre zsh y bash (ver docs/shell-and-dotfiles.md). Punto de
-# partida basado en los segmentos de p10k/.p10k.zsh (backup, sin borrar); se
-# afina editando este archivo, sin tocar ningún shell.
+# Prompt de bash (ver docs/shell-and-dotfiles.md). Se afina editando este
+# archivo, sin tocar el shell.
 #
-# Colores como índices ANSI 0-15 a propósito (igual que p10k/.p10k.zsh): así
-# el prompt hereda la paleta que defina la terminal y sigue el tema activo en
-# vez de fijar colores hex/256.
+# Colores como índices ANSI 0-15 a propósito: así el prompt hereda la paleta
+# que defina la terminal y sigue el tema activo en vez de fijar colores hex/256.
 
 format = """
 $os$directory$git_branch$git_status$docker_context$nodejs$php$python$rust$golang$cmd_duration

@@ -27,44 +27,10 @@ current_login_shell() {
   fi
 }
 
-# Garantiza que zsh (shell alternativa) esté instalado y registrado en /etc/shells.
-# NO cambia el login shell: el defecto es bash (ver ensure_bash_installed); para
-# volver a zsh usa ./scripts/switch-shell.sh zsh. Idempotente.
-ensure_zsh() {
-  # 1) Instalar el binario si no vino en la lista de paquetes (o distro rara).
-  if ! exists zsh; then
-    log "zsh no encontrado; instalándolo…"
-    case "${OS}" in
-      macos)         exists brew && brew install zsh ;;   # macOS ya trae /bin/zsh; guard
-      ubuntu|debian) sudo apt install -y zsh ;;
-      fedora)        sudo dnf install -y zsh ;;
-      bazzite)       sudo rpm-ostree install --idempotent --apply-live zsh \
-                       || { sudo rpm-ostree install --idempotent zsh; \
-                            log "zsh capeado; reinicia y re-ejecuta el bootstrap."; } ;;
-      arch|omarchy)  sudo pacman -S --needed --noconfirm zsh ;;
-      *)             log "No sé instalar zsh en '${OS}'; hazlo manual y re-ejecuta."; return 0 ;;
-    esac
-  fi
-
-  # 2) Resolver la ruta real; si sigue sin existir, no forzar el cambio de shell.
-  local zsh_bin
-  zsh_bin="$(command -v zsh || true)"
-  if [[ -z "${zsh_bin}" ]]; then
-    log "zsh sigue sin estar disponible; se omite el cambio de shell."
-    return 0
-  fi
-
-  # 3) Registrar en /etc/shells (chsh lo exige; el paquete no siempre lo añade).
-  if [[ -r /etc/shells ]] && ! grep -qxF "${zsh_bin}" /etc/shells; then
-    log "Añadiendo ${zsh_bin} a /etc/shells…"
-    echo "${zsh_bin}" | sudo tee -a /etc/shells >/dev/null || true
-  fi
-}
-
 # Instala bash (en macOS, la versión moderna de Homebrew — el /bin/bash 3.2 del
 # sistema está congelado por licencia desde 2007), lo registra en /etc/shells y
-# lo fija como login shell (es el defecto de estos dotfiles; zsh queda como
-# alternativa: ./scripts/switch-shell.sh zsh). Idempotente.
+# lo fija como login shell (es el único shell soportado por estos dotfiles).
+# Idempotente.
 ensure_bash_installed() {
   if [[ "${OS}" == "macos" ]]; then
     if ! exists brew; then
@@ -155,7 +121,6 @@ install_macos() {
     "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc || true
   fi
 
-  ensure_zsh
   ensure_bash_installed
 }
 
@@ -440,7 +405,6 @@ install_ubuntu() {
   ensure_mise
   ensure_nerd_font
 
-  ensure_zsh
   ensure_bash_installed
 }
 
@@ -476,7 +440,6 @@ install_fedora() {
   ensure_mise
   ensure_nerd_font
 
-  ensure_zsh
   ensure_bash_installed
 }
 
@@ -659,7 +622,6 @@ install_arch() {
 
   ensure_nerd_font
 
-  ensure_zsh
   ensure_bash_installed
 
   if [[ "${OS}" == "omarchy" ]]; then
@@ -677,7 +639,6 @@ install_arch() {
 post_checks() {
   echo "[versions]"
   bash --version | head -1
-  exists zsh && zsh --version || echo "zsh: not found (opcional)"
   exists brew && brew --version || true
   exists fzf && fzf --version || echo "fzf: not found"
   exists zoxide && zoxide --version || echo "zoxide: not found"

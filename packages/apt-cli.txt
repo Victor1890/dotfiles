@@ -1,6 +1,5 @@
 git
 stow
-zsh
 bash
 bash-completion
 fastfetch

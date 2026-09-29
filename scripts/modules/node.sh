@@ -4,7 +4,7 @@
 # Sourcear nvm.sh en este proceso deja node/npm en el PATH para los pasos
 # siguientes (sync de LazyVim → Mason, install_node_globals).
 ensure_node() {
-  # Misma ruta que usa la shell (zsh/.config/zsh/integrations.zsh); el installer
+  # Misma ruta que usa la shell (bash/.config/bash/integrations.sh); el installer
   # oficial respeta NVM_DIR si está exportado.
   export NVM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nvm"
   if [[ ! -s "${NVM_DIR}/nvm.sh" ]]; then

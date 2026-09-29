@@ -10,7 +10,7 @@ same on Ubuntu/WSL, Fedora/Bazzite, Arch/Omarchy, and macOS.
 
 Adopted alongside tmux, not instead of it: `nic` (tmux) keeps working
 untouched, `nih` is the herdr equivalent. See
-[`zsh/.config/zsh/functions.zsh`](../zsh/.config/zsh/functions.zsh).
+[`bash/.config/bash/functions.sh`](../bash/.config/bash/functions.sh).
 
 ## Concepts
 

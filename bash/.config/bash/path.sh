@@ -1,8 +1,6 @@
 # ============================================================================
 # PACKAGE MANAGERS (Homebrew)
 # ============================================================================
-# Puerto directo de zsh/.config/zsh/path.zsh — sin ajustes.
-
 # Homebrew - Linux
 if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

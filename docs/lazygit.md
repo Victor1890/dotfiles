@@ -31,7 +31,7 @@ sudo apt install lazygit             # Ubuntu (si está disponible)
 ## Cómo lanzarlo
 
 ```sh
-lzg        # alias de 'lazygit' (definido en zsh/.config/zsh/aliases.zsh)
+lzg        # alias de 'lazygit' (definido en bash/.config/bash/aliases.sh)
 lazygit    # comando completo
 ```
 
