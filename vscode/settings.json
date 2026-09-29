@@ -24,22 +24,22 @@
       {
         "scope": ["keyword.operator", "punctuation.separator"],
         "settings": {
-          "fontStyle": ""
-        }
+          "fontStyle": "",
+        },
       },
       {
         "scope": ["comment", "comment.block"],
         "settings": {
           "fontStyle": "italic",
-          "foreground": "#F5F"
-        }
-      }
-    ]
+          "foreground": "#F5F",
+        },
+      },
+    ],
   },
   "editor.unicodeHighlight.invisibleCharacters": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": "always",
-    "source.sortImports": "always"
+    "source.sortImports": "always",
   },
   "emmet.showAbbreviationSuggestions": false,
   "eslint.enable": true,
@@ -55,12 +55,12 @@
     "showCommands": false,
     "showKeybindings": true,
     "showKeys": false,
-    "showSingleEditorCursorMoves": true
+    "showSingleEditorCursorMoves": true,
   },
   "search.exclude": {
     "**/*.code-search": true,
     "**/bower_components": true,
-    "**/node_modules": true
+    "**/node_modules": true,
   },
   "search.useIgnoreFiles": false,
   "terminal.integrated.fontSize": 14,
@@ -89,51 +89,51 @@
       "editorBracketPairGuide.activeBackground3": "#45A9F9",
       "editorBracketPairGuide.activeBackground4": "#B084EB",
       "editorBracketPairGuide.activeBackground5": "#E6E6E6",
-      "editorBracketPairGuide.activeBackground6": "#19f9d8"
-    }
+      "editorBracketPairGuide.activeBackground6": "#19f9d8",
+    },
   },
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[handlebars]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "files.trimTrailingWhitespace": false
+    "files.trimTrailingWhitespace": false,
   },
   "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[svg]": {
-    "editor.defaultFormatter": "jock.svg"
+    "editor.defaultFormatter": "jock.svg",
   },
   "[amp]": {
-    "editor.defaultFormatter": "FiB.beautyAmp"
+    "editor.defaultFormatter": "FiB.beautyAmp",
   },
   "html.autoClosingTags": true,
   "javascript.autoClosingTags": true,
@@ -182,7 +182,7 @@
     "typecheck",
     "typeorm",
     "uniqid",
-    "varchar"
+    "varchar",
   ],
   "workbench.iconTheme": "vscode-great-icons",
   "workbench.colorTheme": "Omarchy",
@@ -196,5 +196,6 @@
   "terminal.integrated.cursorBlinking": true,
   "breadcrumbs.enabled": false,
   "editor.minimap.enabled": false,
-  "window.commandCenter": false
+  "window.commandCenter": false,
+  "git.confirmSync": false,
 }
