@@ -199,11 +199,6 @@ hyprctl devices -j | jq -r '.keyboards[] | "\(.name)\t\(.layout)\t\(.active_keym
   `chrome://settings/system`), Netflix sigue topado en 1080p igualmente — Linux
   nunca pasa de Widevine L3.
 - One-off extra packages: `omarchy pkg add <name>` (or plain `pacman`/`yay`).
-- Xbox controller: pair over Bluetooth (Super+Ctrl+B) — works with the
-  in-kernel driver; run `omarchy-install-gaming-xbox-controllers` (xpadneo)
-  if you want rumble/battery reporting. Avoid the USB Wireless Adapter
-  dongle: it needs the AUR `xone-dkms` driver and, on a monitor/desk hub, it
-  can brown out and stall boot ~1 min (this happened; see boot-health.sh).
 - Slow boot/login? Run `scripts/boot-health.sh` — it reports per-phase boot
   times, flaky-USB enumeration errors (a bad device can stall the LUKS prompt
   ~1 min), and whether the initramfs has the NVIDIA modules. The bootstrap
@@ -304,13 +299,12 @@ hyprctl devices -j | jq -r '.keyboards[] | "\(.name)\t\(.layout)\t\(.active_keym
   al arrancar. Lo provee `nct6687d-dkms-git` (AUR, en `arch-apps.txt`); el bootstrap
   lo carga y persiste con `ensure_nct6687` en `install-packages.sh`.
 
-- **Perfiles de temperatura y modo Rendimiento automático** (paquete stow
-  `coolercontrol/`): recién instalado, `coolercontrold` detecta todo el
-  hardware pero llega **sin ninguna curva configurada** (`modes.json` y
-  `calibrations.json` vacíos) — todo el hardware queda en "Unmanaged"
-  (perfil `Identity`), es decir, ningún ventilador ni la bomba reaccionan a la
-  temperatura real. Este paquete lo corrige y además cambia de perfil solo al
-  jugar.
+- **Perfiles de temperatura** (paquete stow `coolercontrol/`): recién
+  instalado, `coolercontrold` detecta todo el hardware pero llega **sin
+  ninguna curva configurada** (`modes.json` y `calibrations.json` vacíos) —
+  todo el hardware queda en "Unmanaged" (perfil `Identity`), es decir, ningún
+  ventilador ni la bomba reaccionan a la temperatura real. Este paquete lo
+  corrige.
 
   Canales que realmente se gobiernan (el resto de NZXT/NCT6687 no tiene nada
   físicamente conectado y no se toca):
@@ -332,33 +326,15 @@ hyprctl devices -j | jq -r '.keyboards[] | "\(.name)\t\(.layout)\t\(.active_keym
   - **Silencio** (por defecto, persiste entre arranques vía `apply_on_boot`
     del propio daemon): curvas conservadoras, ventiladores inaudibles hasta
     ~58 °C de CPU / ~52 °C de GPU.
-  - **Rendimiento**: piso de RPM más alto y rampa más agresiva; se activa solo
-    mientras hay una ventana de juego abierta.
+  - **Rendimiento**: piso de RPM más alto y rampa más agresiva; se activa a
+    mano desde la GUI de CoolerControl cuando haga falta más refrigeración —
+    no hay cambio automático de perfil.
 
   `coolercontrol/.local/bin/coolercontrol-provision` aplica `curves.json` vía
   la API REST del daemon (`127.0.0.1:11987`) de forma idempotente (crea o
   actualiza functions/profiles/modes por nombre; los `device_uid` se resuelven
   en cada ejecución, nunca se hardcodean, porque son hashes que cambian si se
   mueve el Kraken de puerto USB o cambia la GPU).
-
-  `coolercontrol/.local/bin/coolercontrol-mode-watcher` (systemd de usuario
-  `coolercontrol-mode-watcher.service`, habilitado por
-  `ensure_coolercontrol_mode_watcher` en `bootstrap.sh`) escucha el socket de
-  eventos de Hyprland (`.socket2.sock`) y, en cada apertura/cierre de ventana,
-  relee **todas** las ventanas abiertas (`hyprctl clients -j`) y activa
-  "Rendimiento" si alguna clase coincide con un patrón de
-  `coolercontrol/.config/coolercontrol-modes/gaming-classes.conf`; si no, vuelve
-  a "Silencio". Se relee sin estado a propósito: `closewindow>>` de Hyprland no
-  trae la clase de la ventana, así que llevar un mapa en memoria se
-  desincroniza en cuanto se pierde un evento o se reinicia el servicio.
-
-  **Para añadir un juego**: añade una línea (glob) a `gaming-classes.conf`, sin
-  reiniciar nada — se relee en cada evento. Para saber la clase de una ventana
-  abierta: `hyprctl clients -j | jq -r '.[] | .class, .initialClass'`. El
-  *cliente* de Steam se deja fuera por defecto (`# steam`, comentado): suele
-  quedarse abierto en segundo plano y dejaría "Rendimiento" activo todo el
-  tiempo; el disparador real son las clases de juego (`steam_app_*`,
-  `gamescope`, `steam_proton`).
 
   **Token de la API** (paso manual, una sola vez, fuera del repo): la API
   exige un Bearer token con permiso de escritura. Créalo desde la GUI de
@@ -368,8 +344,7 @@ hyprctl devices -j | jq -r '.keyboards[] | "\(.name)\t\(.layout)\t\(.active_keym
   install -d -m 700 ~/.local/state/coolercontrol-modes
   umask 077; printf '%s' '<TOKEN>' > ~/.local/state/coolercontrol-modes/api-token
   ```
-  Sin ese fichero, `ensure_coolercontrol_mode_watcher` deja el watcher sin
-  habilitar y avisa en el log del bootstrap; una vez creado el token,
-  re-ejecuta `scripts/bootstrap.sh` (o a mano:
-  `coolercontrol-provision && systemctl --user enable --now coolercontrol-mode-watcher`).
+  Sin ese fichero, `ensure_coolercontrol_profiles` no aprovisiona y avisa en
+  el log del bootstrap; una vez creado el token, re-ejecuta
+  `scripts/bootstrap.sh` (o a mano: `coolercontrol-provision`).
 - To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim tmux shell lazygit`.

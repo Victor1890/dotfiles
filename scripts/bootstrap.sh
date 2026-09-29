@@ -6,8 +6,8 @@ set -euo pipefail
 #
 # Este script es solo el orquestador: detecta el OS y llama, en orden, a los
 # pasos instalables/opcionales, cada uno en su propio archivo bajo
-# scripts/modules/ (stow, herdr, perfiles de Claude, CoolerControl, discos,
-# teclado, .wslconfig, lazygit en macOS, node). Las utilidades genéricas que
+# scripts/modules/ (stow, herdr, perfiles de Claude, CoolerControl, teclado,
+# .wslconfig, lazygit en macOS, node). Las utilidades genéricas que
 # esos módulos comparten (log, os_detect, backup_if_real…) viven en
 # scripts/lib/. Añadir un paso nuevo es: crear su módulo y llamarlo en main().
 
@@ -78,8 +78,7 @@ main() {
   ensure_herdr
   stow_packages
   link_claude_profiles
-  ensure_coolercontrol_mode_watcher
-  ensure_storage_mounts
+  ensure_coolercontrol_profiles
 
   # Node antes del sync para que Mason pueda instalar el LSP de TypeScript.
   ensure_node

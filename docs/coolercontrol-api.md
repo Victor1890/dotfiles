@@ -1,26 +1,23 @@
 # CoolerControl API Notes
 
-Reference for the `coolercontrol/` stow package (temperature profiles + Steam/game auto
-mode switch, see [omarchy.md](omarchy.md) for the user-facing setup and curve values).
-This document is the technical record of how `coolercontrold`'s REST API actually
-behaves, reverse-engineered live against v4.3.1-2 since it has no published OpenAPI
-spec. Keep it in English on purpose: it's an API reference, not usage docs.
+Reference for the `coolercontrol/` stow package (temperature profiles, see
+[omarchy.md](omarchy.md) for the user-facing setup and curve values). This document is
+the technical record of how `coolercontrold`'s REST API actually behaves,
+reverse-engineered live against v4.3.1-2 since it has no published OpenAPI spec. Keep it
+in English on purpose: it's an API reference, not usage docs.
 
 ## What's stowed
 
 - `coolercontrol/.local/bin/coolercontrol-provision` — idempotent script that creates/
   updates the `Silencio`/`Rendimiento` functions, profiles and modes via the API.
-- `coolercontrol/.local/bin/coolercontrol-mode-watcher` — listens to Hyprland's
-  `.socket2.sock` and switches the active mode based on open window classes.
 - `coolercontrol/.config/coolercontrol-modes/curves.json` — the only file to edit to
   change curve numbers.
-- `coolercontrol/.config/coolercontrol-modes/gaming-classes.conf` — window-class glob
-  patterns that trigger `Rendimiento`.
-- `coolercontrol/.config/systemd/user/coolercontrol-mode-watcher.service`.
 
-`scripts/modules/coolercontrol.sh:ensure_coolercontrol_mode_watcher()` (called from
-`bootstrap.sh`) stows the package, runs the provisioning script and enables the service —
-but only once the API token below exists.
+`scripts/modules/coolercontrol.sh:ensure_coolercontrol_profiles()` (called from
+`bootstrap.sh`) stows the package and runs the provisioning script — but only once the
+API token below exists. `Silencio` stays active by default (`apply_on_boot` on the
+daemon); switch to `Rendimiento` manually from the CoolerControl GUI when you want more
+cooling — there's no automatic switch.
 
 ## Prerequisite: API token
 
@@ -153,20 +150,16 @@ Activate: `POST /modes-active/{uid}` (empty body). Read current: `GET /modes-act
 cd ~/dotfiles && ./scripts/bootstrap.sh
 
 # 2. Create the API token from the GUI (Settings > Access Tokens, write access ON),
-#    then save it — bootstrap checks for this file and skips enabling the watcher
-#    until it exists:
+#    then save it — bootstrap checks for this file and skips provisioning until it exists:
 install -d -m 700 ~/.local/state/coolercontrol-modes
 umask 077; printf '%s' '<TOKEN>' > ~/.local/state/coolercontrol-modes/api-token
 
 # 3. Re-run bootstrap (or do it directly):
 coolercontrol-provision
-systemctl --user daemon-reload
-systemctl --user enable --now coolercontrol-mode-watcher.service
 
 # 4. Verify
 curl -s -H "Authorization: Bearer $(cat ~/.local/state/coolercontrol-modes/api-token)" \
   http://127.0.0.1:11987/modes-active | jq .
-journalctl --user -u coolercontrol-mode-watcher.service -f
 ```
 
 If device names changed (new GPU, Kraken on a different USB port), `coolercontrol-provision`

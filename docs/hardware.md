@@ -13,6 +13,6 @@ My machines, for reference.
 - **RGB extras:** Lian Li Strimer Plus 1.3 (PSU cables). How every RGB device is driven:
   see [omarchy.md](omarchy.md)
 - **Storage:** WD Black SN850 500 GB (Windows) · WD Black SN850 1 TB (Arch, btrfs+LUKS) ·
-  2× Samsung 980 PRO 2 TB (M.2 NVMe Gen4) — `Games` y `LIBRARY`, ver [storage.md](storage.md)
+  2× Samsung 980 PRO 2 TB (M.2 NVMe Gen4)
 - **Mouse:** Logitech G305 LIGHTSPEED
 - **Keyboard:** Keychron K2
