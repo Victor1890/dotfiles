@@ -1,6 +1,22 @@
 [user]
-	name = Sinver Aguilo
-	email = 10409334+savaf@users.noreply.github.com
+	name = Victor Rosario
+	email = victorrosario.1890@gmail.com
+	signingkey = A05DAB56C4DCCE4D
+
+[commit]
+	gpgsign = true
+	verbose = true
+
+[gpg]
+	program = /usr/bin/gpg
+
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
 
 [init]
 	defaultBranch = main
@@ -26,12 +42,17 @@
 [diff]
 	colorMoved = default
 	algorithm = histogram
+	mnemonicPrefix = true
 
 [rerere]
 	enabled = true
+	autoupdate = true
 
 [branch]
 	sort = -committerdate
+
+[tag]
+	sort = -version:refname
 
 [column]
 	ui = auto
