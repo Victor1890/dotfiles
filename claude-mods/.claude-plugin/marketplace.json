@@ -1,0 +1,12 @@
+{
+  "name": "dotfiles-mods",
+  "owner": {
+    "name": "Victor1890"
+  },
+  "plugins": [
+    {
+      "name": "replay-theater",
+      "source": "./replay-theater"
+    }
+  ]
+}

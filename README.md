@@ -17,7 +17,7 @@ Cross-platform dotfiles for **Ubuntu/WSL**, **Fedora/Bazzite**, **Arch/Omarchy**
 
 Most top-level folders are a Stow *package*: running `stow <package>` symlinks
 its contents into `$HOME`, preserving the internal directory layout.
-`packages/`, `scripts/`, `docs/` and `system/` are the exceptions — plain
+`packages/`, `scripts/`, `docs/`, `system/` and `claude-mods/` are the exceptions — plain
 utility/reference dirs, not linked by Stow.
 
 ```
@@ -30,6 +30,7 @@ dotfiles/
 ├── lazygit/        # .config/lazygit/config.yml (terminal UI for git)
 ├── shell/          # .profile
 ├── claude/         # .claude/ (Claude Code settings, agents, global CLAUDE.md; shared across profiles)
+├── claude-mods/    # local Claude Code plugin marketplace, referenced by path from claude/.claude/settings.json
 ├── vscode/         # settings.json (symlinked per-OS by a script)
 ├── wsl/            # .wslconfig (copied to the Windows profile on WSL)
 ├── packages/       # package lists (brew/apt/dnf/node/vscode extensions)
@@ -65,7 +66,7 @@ global node packages, and applies OS-specific extras (macOS defaults / WSL
 `.wslconfig`).
 
 ```sh
-git clone git@github.com:savaf/dotfiles.git ~/dotfiles
+git clone git@github.com:Victor1890/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./scripts/bootstrap.sh
 ```

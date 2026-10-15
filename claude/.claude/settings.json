@@ -75,7 +75,7 @@
         ]
       },
       {
-        "matcher": "*",
+        "matcher": "^(startup|resume|clear|compact|fork)$",
         "hooks": [
           {
             "type": "command",
@@ -112,7 +112,8 @@
   },
   "enabledPlugins": {
     "cloudflare@cloudflare": true,
-    "caveman@caveman": true
+    "caveman@caveman": true,
+    "replay-theater@dotfiles-mods": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -125,6 +126,12 @@
       "source": {
         "source": "github",
         "repo": "cloudflare/skills"
+      }
+    },
+    "dotfiles-mods": {
+      "source": {
+        "source": "directory",
+        "path": "~/workspaces/hoobies/dotfiles/claude-mods"
       }
     }
   },

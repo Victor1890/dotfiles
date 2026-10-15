@@ -15,7 +15,7 @@ the Linux side.
 From PowerShell:
 
 ```powershell
-git clone git@github.com:savaf/dotfiles.git ~/dotfiles
+git clone git@github.com:Victor1890/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 .\scripts\bootstrap-windows.cmd
 ```
