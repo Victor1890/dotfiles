@@ -23,7 +23,7 @@ sudo apt update && sudo apt upgrade -y
 
 ```sh
 sudo apt install -y git stow
-git clone git@github.com:savaf/dotfiles.git ~/dotfiles
+git clone git@github.com:Victor1890/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ```
 

@@ -22,7 +22,7 @@ sudo pacman -S --needed git stow
 Then clone:
 
 ```sh
-git clone git@github.com:savaf/dotfiles.git ~/dotfiles
+git clone git@github.com:Victor1890/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ```
 
