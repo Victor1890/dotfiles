@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # statusLine para Claude Code. Recibe por stdin el JSON de estado de la sesión e imprime:
-#   <dir> ⎇ <rama>[✱sucio][↑ahead↓behind] · ctx <pct>%<barra> · $<coste> · +add/-del · <modelo>[ <output_style>] [5h <pct>%]
+#   <dir> ⎇ <rama>[✱sucio][↑ahead↓behind] · ctx <pct>%<barra> · $<coste> · +add/-del · <modelo> <effort>[ <output_style>] · 5h <pct>%↻<hora> 7d <pct>%
 #
 # El modelo va al final y en color porque es el dato que esta línea existe para
 # recordar: sin él la sesión se queda en Opus por inercia (ver docs/claude-code.md).
@@ -26,6 +26,10 @@ ctx_pct="$(get '.context_window.used_percentage')"
 ctx_pct="${ctx_pct%%.*}"
 rl_pct="$(get '.rate_limits.five_hour.used_percentage')"
 rl_pct="${rl_pct%%.*}"
+rl_reset="$(get '.rate_limits.five_hour.resets_at')"
+rl7_pct="$(get '.rate_limits.seven_day.used_percentage')"
+rl7_pct="${rl7_pct%%.*}"
+effort="$(get '.effort.level')"
 
 # 90=gris, 33=amarillo (rama), 36=cian (modelo), 32=verde, 31=rojo.
 grey=$'\033[90m'; reset=$'\033[0m'
@@ -50,8 +54,8 @@ fi
 
 # --- ventana de contexto: barra de 5 bloques + color por umbral ---
 if [[ -n "${ctx_pct}" ]]; then
-  if (( ctx_pct >= 90 )); then ctx_color="${red}"
-  elif (( ctx_pct >= 70 )); then ctx_color="${yellow}"
+  if (( ctx_pct >= 75 )); then ctx_color="${red}"
+  elif (( ctx_pct >= 50 )); then ctx_color="${yellow}"
   else ctx_color="${green}"
   fi
   filled=$(( ctx_pct / 20 ))
@@ -75,9 +79,18 @@ fi
 
 # --- modelo (siempre visible) + output style si no es el default ---
 out="${out} ${grey}·${reset} ${cyan}${model}${reset}"
+[[ -n "${effort}" ]] && out="${out} ${grey}${effort}${reset}"
 [[ -n "${style}" && "${style}" != "default" ]] && out="${out} ${grey}[${style}]${reset}"
 
-# --- % consumido de la ventana de 5h (solo si el plan la expone) ---
-[[ -n "${rl_pct}" ]] && out="${out} ${grey}5h ${rl_pct}%${reset}"
+# --- límites del plan (solo si se exponen): 5h con hora de reinicio, y semanal ---
+if [[ -n "${rl_pct}" ]]; then
+  seg="5h ${rl_pct}%"
+  if [[ -n "${rl_reset}" ]]; then
+    hhmm="$(date -d "@${rl_reset}" +%H:%M 2>/dev/null || date -r "${rl_reset}" +%H:%M 2>/dev/null)"
+    [[ -n "${hhmm}" ]] && seg="${seg}↻${hhmm}"
+  fi
+  out="${out} ${grey}${seg}${reset}"
+fi
+[[ -n "${rl7_pct}" ]] && out="${out} ${grey}7d ${rl7_pct}%${reset}"
 
 printf '%b\n' "${out}"
