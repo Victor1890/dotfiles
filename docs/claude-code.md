@@ -339,7 +339,10 @@ package: the bootstrap symlink above is all it needs. Not in `STOW_PACKAGES`.
 
 `~/.claude/mods` is a symlink to the repo's `claude-mods/`, created by `link_claude_mods()` in
 `scripts/modules/claude-profiles.sh` (called from `bootstrap.sh`). That keeps `settings.json`
-independent of where the repo is cloned; `~` is expanded by Claude Code.
+independent of where the repo is cloned; `~` is expanded by Claude Code. Declaring the
+marketplace in `settings.json` is not enough to install the plugin, so
+`scripts/install-claude-skills.sh` (`register_mods`) runs `claude plugin marketplace add` and
+`claude plugin install replay-theater@dotfiles-mods` per profile. Both are idempotent.
 
 | Plugin | What it does |
 |---|---|

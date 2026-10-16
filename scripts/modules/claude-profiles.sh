@@ -8,7 +8,7 @@ link_claude_profiles() {
   local p dir agent
   for p in "${CLAUDE_PROFILES[@]}"; do
     dir="${HOME}/.claude-${p}"
-    log "Enlazando config compartida de Claude en ${dir}…"
+    log "Linking shared Claude config into ${dir}…"
     mkdir -p "${dir}/agents"
     ln -sfn "${ROOT_DIR}/claude/.claude/settings.json" "${dir}/settings.json"
     ln -sfn "${ROOT_DIR}/claude/.claude/CLAUDE.md" "${dir}/CLAUDE.md"
@@ -19,7 +19,7 @@ link_claude_profiles() {
     # Las skills reales viven en el perfil por defecto (ahí las instala
     # `npx skills add -g`); los perfiles extra las comparten por symlink.
     if [[ -d "${dir}/skills" && ! -L "${dir}/skills" ]]; then
-      log "AVISO: ${dir}/skills es un directorio real; muévelo a ~/.claude/skills y re-ejecuta."
+      log "WARNING: ${dir}/skills is a real directory; move it to ~/.claude/skills and re-run."
     else
       ln -sfn "${HOME}/.claude/skills" "${dir}/skills"
     fi
@@ -29,6 +29,7 @@ link_claude_profiles() {
 # Marketplace local de plugins (claude-mods/). settings.json lo referencia por
 # una ruta estable (~/.claude/mods) para no hardcodear dónde está clonado el repo.
 link_claude_mods() {
+  log "Linking claude-mods plugin marketplace at ${HOME}/.claude/mods…"
   mkdir -p "${HOME}/.claude"
   ln -sfn "${ROOT_DIR}/claude-mods" "${HOME}/.claude/mods"
 }

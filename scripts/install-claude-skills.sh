@@ -58,6 +58,32 @@ register_mcp() {
   unset CLAUDE_CONFIG_DIR
 }
 
+# Local plugin marketplace (claude-mods/, linked at ~/.claude/mods by
+# link_claude_mods). settings.json only declares it; the CLI add/install makes
+# the plugin available without a manual step. Per profile, like the MCP.
+register_mods() {
+  if ! exists claude; then
+    log "claude CLI not available; skipping claude-mods."
+    return 0
+  fi
+  local profile label
+  for profile in "${CLAUDE_PROFILES[@]}"; do
+    if [[ -n "${profile}" ]]; then
+      label="${profile}"
+      export CLAUDE_CONFIG_DIR="${HOME}/.claude-${profile}"
+    else
+      label="default"
+      unset CLAUDE_CONFIG_DIR
+    fi
+    log "Registering claude-mods marketplace + replay-theater (${label})…"
+    claude plugin marketplace add "${HOME}/.claude/mods" \
+      && claude plugin install replay-theater@dotfiles-mods \
+      || log "Failed to register claude-mods for ${label} (continuing)."
+  done
+  unset CLAUDE_CONFIG_DIR
+}
+
 install_skills
 register_mcp
-log "Claude Code skills/MCP done."
+register_mods
+log "Claude Code skills/MCP/mods done."

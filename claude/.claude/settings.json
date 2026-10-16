@@ -131,7 +131,7 @@
     "dotfiles-mods": {
       "source": {
         "source": "directory",
-        "path": "~/.claude/mods"
+        "path": "/home/victor1890/.claude/mods"
       }
     }
   },

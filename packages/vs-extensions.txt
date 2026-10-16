@@ -37,7 +37,6 @@ kisstkondoros.vscode-gutter-preview
 leo-labs.dotnet
 leonardssh.vscord
 llvm-vs-code-extensions.vscode-clangd
-local.omarchy-theme
 mattpocock.ts-error-translator
 mhutchie.git-graph
 miguelsolorio.fluent-icons
