@@ -131,7 +131,7 @@
     "dotfiles-mods": {
       "source": {
         "source": "directory",
-        "path": "~/workspaces/hoobies/dotfiles/claude-mods"
+        "path": "~/.claude/mods"
       }
     }
   },

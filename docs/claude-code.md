@@ -327,7 +327,7 @@ machine only — `claude-mods/` is a `"source": "directory"` marketplace declare
 ```json
 "extraKnownMarketplaces": {
   "dotfiles-mods": {
-    "source": { "source": "directory", "path": "~/workspaces/hoobies/dotfiles/claude-mods" }
+    "source": { "source": "directory", "path": "~/.claude/mods" }
   }
 }
 ```
@@ -335,11 +335,11 @@ machine only — `claude-mods/` is a `"source": "directory"` marketplace declare
 `claude-mods/.claude-plugin/marketplace.json` lists the plugins; each one is a folder with its
 own `.claude-plugin/plugin.json` and a `hooks/hooks.json` pointing at its module(s) — the same
 shape a GitHub-hosted plugin has, just read from this path instead of cloned. **Not** a Stow
-package: `settings.json`'s `path` points straight at the repo, so nothing needs linking into
-`$HOME`. Not in `STOW_PACKAGES`.
+package: the bootstrap symlink above is all it needs. Not in `STOW_PACKAGES`.
 
-The path is this machine's actual clone location, not `~/dotfiles` — there's no symlink
-convention tying the repo to a fixed path, so if the repo ever moves, update that one `path`.
+`~/.claude/mods` is a symlink to the repo's `claude-mods/`, created by `link_claude_mods()` in
+`scripts/modules/claude-profiles.sh` (called from `bootstrap.sh`). That keeps `settings.json`
+independent of where the repo is cloned; `~` is expanded by Claude Code.
 
 | Plugin | What it does |
 |---|---|

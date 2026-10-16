@@ -78,6 +78,7 @@ main() {
   ensure_herdr
   stow_packages
   link_claude_profiles
+  link_claude_mods
   ensure_coolercontrol_profiles
 
   # Node antes del sync para que Mason pueda instalar el LSP de TypeScript.
