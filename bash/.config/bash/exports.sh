@@ -27,6 +27,10 @@ setup_locale 2>/dev/null
 export EDITOR='nvim'
 export VISUAL='nvim'
 
+# AI guardrails (Claude Code and opencode): block commits and edits on these branches.
+# See docs/claude-code.md and docs/opencode.md.
+export AI_GUARD_PROTECT_BRANCHES='main,master'
+
 # GPG (firma de commits, etc.)
 export GPG_TTY="$(tty 2>/dev/null || true)"
 

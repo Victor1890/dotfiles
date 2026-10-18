@@ -25,6 +25,7 @@ repo entero.
 | lazygit | `docs/lazygit.md` |
 | VS Code | `docs/vscode.md` |
 | Claude Code (settings, agentes, skills, hooks) | `docs/claude-code.md` |
+| opencode (modelo, agentes, permisos) | `docs/opencode.md` |
 | Node.js | `docs/nodejs.md` |
 | CoolerControl (perfiles de temperatura, API) | `docs/coolercontrol-api.md` (inglés) |
 | Setup de una plataforma concreta | `docs/{ubuntu-wsl,bazzite,omarchy,macos-setup}.md` |
