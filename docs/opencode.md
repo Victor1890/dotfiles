@@ -36,22 +36,49 @@ leyendo `~/.claude/docs/review-output.md`.
 `Explore` → `explore`, `general-purpose` → `general`, `Plan` → `plan` (primary); sobrescriben
 los integrados por ID. Los de solo lectura llevan `edit` denegado.
 
-## Guardrails
+## Plugins (adaptador de `claude-mods` y hooks)
 
-Los hooks de Claude (`git-guardrails.mjs`, `guard-protected-branch.mjs`) **no se portan**:
-los plugins v1 no corren en v2 y la API de plugins v2 no documenta intercepción de tools.
-En su lugar, `policies` con `tool.use` y `shell:<glob>` deniega (duro, sin prompt, no se
-puede reabrir desde un proyecto) las reglas SAFETY: `rm -rf`, `git reset --hard`,
-`git clean -f`, force-push, `git branch -D`, `git reflog expire`, `git checkout .`,
-`git restore .`. Los mismos globs aparecen como `deny` en `permissions`. Más burdo que el regex
-por segmento: no distingue `main` de otra rama y no hay guard de rama protegida.
+Equivalente opencode de los hooks de Claude y de `claude-mods/`. Son archivos sueltos
+`plugins/*.js` con `export default { id, setup(ctx) }` (API v2). Se descubren solos
+(no declarar en `plugins`: una entrada ahí cuelga el arranque). Se verificaron de punta a punta
+con `opencode run`.
+
+| Plugin | Equivale a | Cómo |
+|---|---|---|
+| `guardrails.js` | `git-guardrails.mjs` + `guard-protected-branch.mjs` | `ctx.permission.hook("evaluate")` pone `effect = "deny"`. Importa las reglas de `~/.claude/hooks/*.mjs` (una sola fuente, mismos tests y mismas variables `AI_GUARD_*`) |
+| `replay.js` | `claude-mods/replay-theater` | `ctx.tool.hook("execute.before/after")` registra los pasos de `write`/`edit`; tool `replay` y comando `/replay`. Sin pane/banda: opencode no tiene API de UI para plugins |
+
+Capas de defensa para shell, de fuera hacia dentro: `policies` (globs, duro) → `permissions`
+(`deny` al final, gana la última) → `guardrails.js` (regex por segmento, rama protegida).
+El plugin cubre lo que los globs no ven (`rm -r -f`, commit en rama protegida, edits en rama
+protegida). Rama protegida: `AI_GUARD_PROTECT_BRANCHES=main` en el entorno **al arrancar el
+servicio** (ver trampas).
+
+Shapes reales (v2.0.31, medidos con un plugin sonda):
+
+- permiso: `{action, resources[], effect, message?}`; `edit` trae rutas relativas, `shell` el comando
+- tool: `{tool: "write"|"edit"|"shell"|..., id, input, status, result}`;
+  `write` = `{path, content}`, `edit` = `{path, oldString, newString}`
+- tool propia: `ctx.tool.transform(e => e.add({name, description, parameters, execute}))`;
+  `execute` devuelve `{content: [{type: "text", text}]}` (un campo `output` sin schema falla)
+- comando: `ctx.command.transform(e => e.add({name, description, execute}))`
+- un tool llamado vía el tool `execute` (Code Mode) también dispara los hooks
+
+## Trampas
+
+- opencode corre un **servicio en segundo plano** (`opencode serve --service`). Carga los plugins
+  y el entorno una sola vez: tras editar un plugin o cambiar `AI_GUARD_*`, mátalo
+  (`kill $(pgrep -f '[o]pencode.exe serve --service')`) y el próximo `opencode` lo relanza.
+- La primera ejecución tras relanzarlo deja el servicio heredando el pipe: `opencode run ... | tail`
+  parece colgado. Redirige a un archivo.
+- `opencode run '/cmd'` no despacha comandos de plugin (solo la TUI): se probaron vía tool.
 
 Resto de shell: `ask`, salvo la lista de lectura permitida (la de `settings.json`).
 
 ## Notas
 
 - El plugin de caveman (`plugins/caveman/`) es v1: no corre en v2. El modo funciona solo por el
-  bloque de `AGENTS.md`. Por eso `opencode.json` no declara `plugins`.
+  bloque de `AGENTS.md`. `opencode.json` no declara `plugins`.
 - `service.json` (password local), `node_modules`, `commands/`, `skills/` y `agents/cavecrew-*`
   los gestiona el instalador de caveman: fuera del paquete.
 - Verificar: `opencode debug agents`, `opencode debug config`.
