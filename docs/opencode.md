@@ -46,6 +46,7 @@ con `opencode run`.
 | Plugin | Equivale a | Cómo |
 |---|---|---|
 | `guardrails.js` | `git-guardrails.mjs` + `guard-protected-branch.mjs` | `ctx.permission.hook("evaluate")` pone `effect = "deny"`. Importa las reglas de `~/.claude/hooks/*.mjs` (una sola fuente, mismos tests y mismas variables `AI_GUARD_*`) |
+| `skill-commands.js` | `/<skill>` de Claude Code | Registra cada skill descubierto como comando (`/git-commit`, `/tdd`, `/design-taste-frontend`…). Adjunta el skill al prompt (`skills: [{id}]`, inyecta el `SKILL.md` completo) y pasa los argumentos como texto. Los skills aparecen tras el arranque, así que el plugin sondea ~12 s y recarga los comandos |
 | `replay.js` | `claude-mods/replay-theater` | `ctx.tool.hook("execute.before/after")` registra los pasos de `write`/`edit`; tool `replay` y comando `/replay`. Sin pane/banda: opencode no tiene API de UI para plugins |
 
 Capas de defensa para shell, de fuera hacia dentro: `policies` (globs, duro) → `permissions`
@@ -71,7 +72,12 @@ Shapes reales (v2.0.31, medidos con un plugin sonda):
   (`kill $(pgrep -f '[o]pencode.exe serve --service')`) y el próximo `opencode` lo relanza.
 - La primera ejecución tras relanzarlo deja el servicio heredando el pipe: `opencode run ... | tail`
   parece colgado. Redirige a un archivo.
-- `opencode run '/cmd'` no despacha comandos de plugin (solo la TUI): se probaron vía tool.
+- `opencode run '/cmd'` no despacha comandos (solo la TUI). Para probarlos sin TUI usa la API:
+  `opencode api command.list` (desde el directorio del proyecto, tras una ejecución), luego
+  `opencode api session.create -d '{}'` y
+  `opencode api session.command --param sessionID=<id> -d '{"name":"ponytail","text":"..."}'`;
+  `opencode api session.context --param sessionID=<id>` muestra el prompt con el skill adjunto.
+- Los skills nuevos se ven tras reiniciar el servicio (`skill-commands.js` los lee al arrancar).
 
 Resto de shell: `ask`, salvo la lista de lectura permitida (la de `settings.json`).
 
