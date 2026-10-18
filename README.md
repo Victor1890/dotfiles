@@ -5,13 +5,15 @@ Cross-platform dotfiles for **Ubuntu/WSL**, **Fedora/Bazzite**, **Arch/Omarchy**
 
 ## Contents
 
-- [Repository structure](#repository-structure)
-- [Requirements](#requirements)
-- [Quick start (recommended)](#quick-start-recommended)
-- [Manual usage with Stow](#manual-usage-with-stow)
-- [Package lists](#package-lists)
-- [Notes](#notes)
-- [Setup guides](#setup-guides)
+- [Dotfiles](#dotfiles)
+  - [Contents](#contents)
+  - [Repository structure](#repository-structure)
+  - [Requirements](#requirements)
+  - [Quick start (recommended)](#quick-start-recommended)
+  - [Manual usage with Stow](#manual-usage-with-stow)
+  - [Package lists](#package-lists)
+  - [Notes](#notes)
+  - [Setup guides](#setup-guides)
 
 ## Repository structure
 
@@ -31,6 +33,7 @@ dotfiles/
 ├── shell/          # .profile
 ├── claude/         # .claude/ (Claude Code settings, agents, global CLAUDE.md; shared across profiles)
 ├── claude-mods/    # local Claude Code plugin marketplace, referenced by path from claude/.claude/settings.json
+├── opencode/       # .config/opencode/ (opencode v2: model, agents, permissions, plugins, global AGENTS.md)
 ├── vscode/         # settings.json (symlinked per-OS by a script)
 ├── wsl/            # .wslconfig (copied to the Windows profile on WSL)
 ├── packages/       # package lists (brew/apt/dnf/node/vscode extensions)
@@ -80,7 +83,7 @@ To link (or unlink) individual packages yourself:
 
 ```sh
 cd ~/dotfiles
-stow bash git starship nvim tmux shell lazygit claude   # link everything
+stow bash git starship nvim tmux herdr shell lazygit claude opencode   # link everything
 stow nvim                                    # link just one package
 stow -D nvim                                 # unlink (remove symlinks)
 stow -R bash                                  # restow (refresh) after changes
@@ -126,4 +129,6 @@ Step-by-step guides for a fresh machine live in [`docs/`](docs):
 | [nvim.md](docs/nvim.md) | Neovim (LazyVim) setup, requirements and basics |
 | [tmux.md](docs/tmux.md) | tmux prefix, panes/windows and copy mode |
 | [lazygit.md](docs/lazygit.md) | lazygit keybindings and workflows |
+| [claude-code.md](docs/claude-code.md) | Claude Code profiles, agents, skills, hooks and token costs |
+| [opencode.md](docs/opencode.md) | opencode v2 config: MiMo model, agents, permissions, plugins, gotchas |
 | [hardware.md](docs/hardware.md) | My machines, for reference |
