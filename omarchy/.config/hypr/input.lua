@@ -11,7 +11,7 @@
 hl.config({
   input = {
     kb_layout = "us,latam",
-    kb_variant = "",
+    kb_variant = "altgr-intl,",
     kb_options = "compose:caps,shift:both_capslock_cancel",
   },
 })
@@ -23,6 +23,7 @@ hl.config({
 hl.device({
   name = "at-translated-set-2-keyboard",
   kb_layout = "latam,us",
+  kb_variant = ",altgr-intl",
   kb_options = "compose:caps,shift:both_capslock_cancel",
 })
 
