@@ -497,7 +497,7 @@
       "approveResponse": false,
     },
   },
-  "workbench.colorTheme": "Omarchy",
+  "workbench.colorTheme": "Matte Black",
   "githubLocalActions.dockerDesktopPath": "/Applications/Docker.app",
   "chat.tips.enabled": false,
   "window.customTitleBarVisibility": "auto",

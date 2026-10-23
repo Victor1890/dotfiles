@@ -1,17 +1,14 @@
--- Ver https://wiki.hypr.land/Configuring/Basics/Monitors/
--- Lista de monitores y modos soportados: hyprctl monitors all
---
--- Mismo truco que el device{} de input.lua: Hyprland ignora las reglas de outputs que no
--- existen, así el mismo archivo sirve en la laptop y en el desktop.
+-- See https://wiki.hypr.land/Configuring/Basics/Monitors/
+-- List current monitors and supported resolutions with: hyprctl monitors all
 
-hl.env("GDK_SCALE", "1")
+local omarchy_gdk_scale = 1
+local omarchy_monitor_scale = "auto"
 
--- Default: ThinkPad (eDP-1 1920x1200) y el monitor externo 1080p.
-hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
+hl.env("GDK_SCALE", tostring(omarchy_gdk_scale))
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = omarchy_monitor_scale })
 
--- Desktop ANDREA: ultrawide Samsung C49RG9x (3840x1080) a 1x. Rellenar el output con lo que
--- reporte `hyprctl monitors all` en esa máquina (nombre de puerto o "desc:<description>").
--- hl.monitor({ output = "desc:...", mode = "preferred", position = "auto", scale = 1 })
+-- Configure a specific monitor.
+-- hl.monitor({ output = "DP-2", mode = "2560x1440@144", position = "0x0", scale = 1 })
 
--- Monitor secundario en vertical (transform: 1 = 90°, 3 = 270°).
+-- Portrait/rotated secondary monitor (transform: 1 = 90°, 3 = 270°).
 -- hl.monitor({ output = "DP-2", mode = "preferred", position = "auto", scale = 1, transform = 1 })
