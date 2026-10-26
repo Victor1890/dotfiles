@@ -1,18 +1,18 @@
 alt-tab
-brave-browser
+# brave-browser
 discord
 font-monaspace-nerd-font
 google-chrome
 hiddenbar
 iterm2
-keka
+# keka
 rectangle
-slack
+# slack
 stats
 suspicious-package
-telegram-desktop
+# telegram-desktop
 visual-studio-code
-vlc
+# vlc
 whatsapp
 spotify
 bitwarden
@@ -21,8 +21,8 @@ obsidian
 zoom
 microsoft-teams
 microsoft-outlook
-grammarly-desktop
-caffeine
+# grammarly-desktop
+# caffeine
 dbeaver-community
 claude
 claude-code
