@@ -54,6 +54,9 @@ main() {
   # según las ventanas abiertas (ver docs/omarchy.md).
   [[ "${OS}" == "omarchy" ]] && STOW_PACKAGES+=(omarchy coolercontrol)
 
+  # Solo macOS: zsh es el login shell (Oh My Zsh); git-macos trae los overrides de git.
+  [[ "${OS}" == "macos" ]] && STOW_PACKAGES+=(zsh git-macos)
+
   # Un solo prompt de sudo para todo el bootstrap; el keep-alive del padre cubre
   # install-packages.sh, ensure_locale y ensure_stow.
   require_sudo
