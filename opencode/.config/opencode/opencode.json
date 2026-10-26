@@ -7,14 +7,6 @@
       "model": "opencode/mimo-v2.6-flash-free"
     }
   },
-  "mcp": {
-    "servers": {
-      "context7": {
-        "type": "remote",
-        "url": "https://mcp.context7.com/mcp"
-      }
-    }
-  },
   "permissions": [
     {
       "action": "skill",

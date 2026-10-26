@@ -54,6 +54,9 @@ main() {
   # según las ventanas abiertas (ver docs/omarchy.md).
   [[ "${OS}" == "omarchy" ]] && STOW_PACKAGES+=(omarchy coolercontrol)
 
+  # Solo macOS: zsh es el login shell (Oh My Zsh); git-macos trae los overrides de git.
+  [[ "${OS}" == "macos" ]] && STOW_PACKAGES+=(zsh git-macos)
+
   # Un solo prompt de sudo para todo el bootstrap; el keep-alive del padre cubre
   # install-packages.sh, ensure_locale y ensure_stow.
   require_sudo
@@ -108,7 +111,7 @@ main() {
 
   install_node_globals
 
-  # Skills y MCP de Claude Code (necesita npx en PATH, ya cargado arriba).
+  # Skills y plugins de Claude Code (necesita npx en PATH, ya cargado arriba).
   "${SCRIPT_DIR}/install-claude-skills.sh" || true
 
   link_lazygit_macos

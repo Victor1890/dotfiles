@@ -3,8 +3,6 @@
 
 # Config packages that get symlinked into $HOME via stow.
 STOW_PACKAGES=(bash git starship nvim tmux herdr shell lazygit claude opencode)
-# macOS only: zsh is the login shell (Oh My Zsh); git-macos holds the git overrides.
-[[ "${OS}" == macos ]] && STOW_PACKAGES+=(zsh git-macos)
 
 ensure_stow() {
   exists stow && return 0

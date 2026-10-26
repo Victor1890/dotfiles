@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Installs Claude Code skills listed in packages/claude-skills.txt (user-level,
-# ~/.claude/skills) and registers the context7 MCP server. Idempotent: already
+# ~/.claude/skills) and registers the claude-mods plugin. Idempotent: already
 # installed skills are skipped by the skills CLI itself.
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -28,39 +28,14 @@ install_skills() {
   done < "${SKILLS_LIST}"
 }
 
-# MCP servers live in each profile's own .claude.json, so they can't be
-# symlinked — register them once per config dir. "" = default profile
-# (~/.claude); the rest mirror CLAUDE_PROFILES in bootstrap.sh.
+# Plugins live in each profile's own config dir, so they can't be symlinked —
+# register them once per config dir. "" = default profile (~/.claude); the rest
+# mirror CLAUDE_PROFILES in bootstrap.sh.
 CLAUDE_PROFILES=("" work)
-
-register_mcp() {
-  if ! exists claude; then
-    log "claude CLI not available; skipping MCP registration."
-    return 0
-  fi
-  local profile label
-  for profile in "${CLAUDE_PROFILES[@]}"; do
-    if [[ -n "${profile}" ]]; then
-      label="${profile}"
-      export CLAUDE_CONFIG_DIR="${HOME}/.claude-${profile}"
-    else
-      label="default"
-      unset CLAUDE_CONFIG_DIR
-    fi
-    if claude mcp get context7 >/dev/null 2>&1; then
-      log "MCP context7 already registered (${label})."
-    else
-      log "Registering MCP context7 (user scope, ${label})…"
-      claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp \
-        || log "Failed to register context7 for ${label} (continuing)."
-    fi
-  done
-  unset CLAUDE_CONFIG_DIR
-}
 
 # Local plugin marketplace (claude-mods/, linked at ~/.claude/mods by
 # link_claude_mods). settings.json only declares it; the CLI add/install makes
-# the plugin available without a manual step. Per profile, like the MCP.
+# the plugin available without a manual step. Per profile.
 register_mods() {
   if ! exists claude; then
     log "claude CLI not available; skipping claude-mods."
@@ -84,6 +59,5 @@ register_mods() {
 }
 
 install_skills
-register_mcp
 register_mods
-log "Claude Code skills/MCP/mods done."
+log "Claude Code skills/mods done."
