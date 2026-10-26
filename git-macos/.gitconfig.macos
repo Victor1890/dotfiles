@@ -1,0 +1,28 @@
+# ~/.gitconfig.macos — macOS-only git overrides (stow package git-macos, linked only on macOS).
+# Included at the end of git/.gitconfig, so everything here wins over the shared config.
+
+[user]
+	name = Victor1890
+	email = victorrosario.1890@gmail.com
+	# SSH signing instead of the repo's GPG key
+	signingkey = ~/.ssh/id_ed25519.pub
+
+[gpg]
+	format = ssh
+	program = /opt/homebrew/bin/gpg
+
+[gpg "ssh"]
+	allowedSignersFile = ~/.config/git/allowed_signers
+
+# The repo uses `gh auth git-credential` at /usr/bin/gh (Linux path); here the
+# plain credential store is used. The empty `helper =` resets the repo's list.
+[credential]
+	helper = store
+
+[credential "https://github.com"]
+	helper =
+	helper = store
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = store

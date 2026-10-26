@@ -4,8 +4,9 @@ How the shell is set up and how these dotfiles are applied.
 
 ## bash
 
-bash is the **only supported login shell**: `bootstrap.sh`/`install-packages.sh`
-install it (Homebrew's modern bash on macOS) and `chsh` to it.
+bash is the supported login shell on Linux/WSL: `bootstrap.sh`/`install-packages.sh`
+install it (Homebrew's modern bash on macOS) and `chsh` to it. macOS uses zsh
+(see [zsh (macOS)](#zsh-macos)).
 
 The configuration is **modular**: `~/.bashrc` is a slim loader that sources
 focused files from `~/.config/bash/`:
@@ -52,6 +53,32 @@ macOS ships `/bin/bash` 3.2 (frozen since 2007 over licensing). `ensure_bash_ins
 in `scripts/install-packages.sh` installs a modern bash via Homebrew instead —
 same pattern already used for Homebrew itself in `path.sh`.
 
+## zsh (macOS)
+
+On macOS the login shell is zsh (the system default), configured by the `zsh`
+Stow package (only linked when `OS=macos`). It mirrors bash's layout:
+`~/.zshrc` is a slim loader that sources `~/.config/zsh/*.zsh`, and `~/.zshenv`
+loads cargo.
+
+| Module | Responsibility |
+|--------|----------------|
+| `exports.zsh` | shim → bash's `exports.sh` |
+| `path.zsh` | Homebrew + this Mac's `PATH` (pnpm in `~/Library/pnpm`, bun, PHP 8.2, LM Studio, opencode, Antigravity) |
+| `plugins.zsh` | Oh My Zsh (`robbyrussell`) + `git`, `zsh-autosuggestions`, `fast-syntax-highlighting` (keep last); runs `compinit` |
+| `completion.zsh` | completions that need `compinit` first (bun) |
+| `history.zsh` | `hist_ignore_space` + `hist_ignore_all_dups` on top of OMZ's defaults |
+| `aliases.zsh` | shim → bash's `aliases.sh`, plus `rzsh`/`ezsh` and the `npm` → pnpm reminder |
+| `functions.zsh` | shim → bash's `functions.sh` |
+| `integrations.zsh` | iTerm2, fzf, zoxide (needed by the `cd` → `z` alias), nvm (`~/.nvm`), pyenv |
+
+Aliases, functions and exports have a single copy, in the bash package, so zsh
+requires `bash` to be stowed too (the bootstrap does both). The prompt is OMZ's
+`robbyrussell`, not Starship, and the git aliases come from OMZ's `git` plugin
+(bash gets them from `git.sh`).
+
+Oh My Zsh and both custom plugins are not versioned: they are cloned on the
+first shell start if missing.
+
 ## Starship (prompt)
 
 [Starship](https://starship.rs) is the prompt, configured in
@@ -82,6 +109,7 @@ Or link packages manually:
 ```sh
 cd ~/dotfiles
 stow --no-folding bash git starship nvim tmux herdr shell lazygit claude   # link everything
+stow --no-folding zsh                                                 # macOS only
 stow --no-folding omarchy                                             # Omarchy only
 stow --no-folding nvim                                                # just one package
 stow -D nvim                                                          # unlink

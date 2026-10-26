@@ -153,6 +153,11 @@
     },
     {
       "action": "shell",
+      "resource": "gh api /user",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
       "resource": "ls*",
       "effect": "allow"
     },

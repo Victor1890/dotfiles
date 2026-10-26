@@ -73,3 +73,12 @@
 	amend = commit --amend --no-edit
 	undo = reset --soft HEAD~1
 	cleanup = "!git branch --merged main | grep -v '\\*\\|main' | xargs -r git branch -d"
+
+# Per-OS / per-machine overrides. Keep these LAST so they win; git silently
+# ignores an include whose file does not exist.
+# .gitconfig.macos comes from the git-macos stow package (macOS only);
+# .gitconfig.local is for unversioned, machine-private settings (gitignored).
+[include]
+	path = ~/.gitconfig.macos
+[include]
+	path = ~/.gitconfig.local

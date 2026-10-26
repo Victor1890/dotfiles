@@ -24,6 +24,9 @@ fi
 [[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
 [[ -d "$HOME/bin" ]] && export PATH="$HOME/bin:$PATH"
 
+# opencode (official installer; see scripts/modules/opencode.sh)
+[[ -d "$HOME/.opencode/bin" ]] && export PATH="$HOME/.opencode/bin:$PATH"
+
 # ============================================================================
 # PNPM
 # ============================================================================

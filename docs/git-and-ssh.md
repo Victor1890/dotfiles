@@ -4,6 +4,18 @@ Git defaults live in [`git/.gitconfig`](../git/.gitconfig) (aliases,
 `pull.rebase = true`, `push.autoSetupRemote`, `nvim` as editor, etc.). For a TUI
 on top of git, see [lazygit.md](lazygit.md).
 
+## Per-OS config (`git-macos/`)
+
+`git/.gitconfig` ends with includes for `~/.gitconfig.macos` and `~/.gitconfig.local`, so
+anything in them overrides the shared config; git ignores an include whose file is missing.
+
+- [`git-macos/.gitconfig.macos`](../git-macos/.gitconfig.macos) is a Stow package linked
+  **only on macOS** (`scripts/modules/stow.sh`). It holds: the `Victor1890` name, SSH commit
+  signing (`gpg.format = ssh`, the `id_ed25519.pub` key and `allowed_signers`), Homebrew's gpg
+  path, and the plain `credential.helper = store` (the shared config points at `/usr/bin/gh`,
+  which does not exist on macOS).
+- `~/.gitconfig.local` is for private, unversioned settings (`*.local` is gitignored).
+
 ## GitHub SSH setup
 
 Generate a key and add it to GitHub for SSH auth over Git.

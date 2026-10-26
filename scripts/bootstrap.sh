@@ -76,6 +76,7 @@ main() {
   ensure_locale
   ensure_stow
   ensure_herdr
+  ensure_opencode
   stow_packages
   link_claude_profiles
   link_claude_mods
