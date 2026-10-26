@@ -1,91 +1,100 @@
 # opencode
 
-Paquete Stow `opencode/` → `~/.config/opencode/`. Espejo de la config de Claude Code
-(`docs/claude-code.md`), con un único modelo para todo: `opencode/mimo-v2.6-flash-free`
-(MiMo-V2.6-Flash vía el proveedor integrado de opencode; sin API key externa ni `providers`).
+Stow package `opencode/` → `~/.config/opencode/`. Mirrors the Claude Code config
+(`docs/claude-code.md`), with a single model for everything: `opencode/mimo-v2.6-flash-free`
+(MiMo-V2.6-Flash via opencode's built-in provider; no external API key or `providers`).
 
-**Formato v2 obligatorio.** Guía: <https://opencode.ai/v2/docs/migrate-v1/>. Claves v1
-(`permission`, `agent`, `plugin`, `autoupdate`, `small_model`, `tui.json`) se normalizan en
-memoria pero no se deben usar: este paquete solo escribe claves v2.
+**v2 format required.** Guide: <https://opencode.ai/v2/docs/migrate-v1/>. v1 keys
+(`permission`, `agent`, `plugin`, `autoupdate`, `small_model`, `tui.json`) are normalized in
+memory but must not be used: this package only writes v2 keys.
 
-## Qué se versiona
+## Installation
 
-| Archivo | Equivale en Claude Code |
+`scripts/bootstrap.sh` calls `ensure_opencode` (`scripts/modules/opencode.sh`) before stowing:
+if opencode is missing, or is v1, it runs the v2 installer
+(`curl -fsSL https://opencode.ai/v2/install | bash`, which replaces the v1 binary in
+`~/.opencode/bin`). `--no-modify-path` is passed so the installer does not write to
+`.zshrc`/`.bashrc` (symlinks into the repo); `path.sh` and `path.zsh` set the PATH instead.
+v2 reads the same `~/.config/opencode`, so the package layout does not change.
+
+## What is versioned
+
+| File | Claude Code equivalent |
 |---|---|
 | `opencode.json` | `settings.json`: `model`, `permissions`, `policies`, `mcp`, `update` |
-| `AGENTS.md` | `CLAUDE.md` global + bloque caveman. v2 solo lee `AGENTS.md`, no `CLAUDE.md` |
-| `agents/*.md` | `claude/.claude/agents/*.md` (los 9, mismo modelo) |
-| `cli.json` | tema y UI del terminal (v2 lo guarda global, antes `tui.json`) |
+| `AGENTS.md` | global `CLAUDE.md` + caveman block. v2 only reads `AGENTS.md`, not `CLAUDE.md` |
+| `agents/*.md` | `claude/.claude/agents/*.md` (all 9, same model) |
+| `cli.json` | terminal theme and UI (v2 stores it globally, formerly `tui.json`) |
 
-Los skills **no se copian**: v2 descubre `~/.claude/skills/*/SKILL.md`. Los reviewers siguen
-leyendo `~/.claude/docs/review-output.md`.
+Skills are **not copied**: v2 discovers `~/.claude/skills/*/SKILL.md`. The reviewers still
+read `~/.claude/docs/review-output.md`.
 
-## Mapa v1 → v2 usado aquí
+## v1 → v2 mapping used here
 
 | Claude / v1 | v2 |
 |---|---|
-| `permission.bash` | `permissions` array, `action: shell` (gana la **última** regla) |
+| `permission.bash` | `permissions` array, `action: shell` (the **last** rule wins) |
 | `small_model` | `agents.title.model` |
 | `autoupdate: false` | `update: "disable"` |
 | `mcp.<n>` + `enabled` | `mcp.servers.<n>` + `disabled` |
-| agente `permission:` | `permissions:` lista de `{action, resource, effect}` |
-| agente `temperature`, `effort`, `tools` | no existen; se descartan |
+| agent `permission:` | `permissions:` list of `{action, resource, effect}` |
+| agent `temperature`, `effort`, `tools` | do not exist; dropped |
 
-## Agentes
+## Agents
 
-`Explore` → `explore`, `general-purpose` → `general`, `Plan` → `plan` (primary); sobrescriben
-los integrados por ID. Los de solo lectura llevan `edit` denegado.
+`Explore` → `explore`, `general-purpose` → `general`, `Plan` → `plan` (primary); they override
+the built-ins by ID. Read-only agents have `edit` denied.
 
-## Plugins (adaptador de `claude-mods` y hooks)
+## Plugins (adapter for `claude-mods` and hooks)
 
-Equivalente opencode de los hooks de Claude y de `claude-mods/`. Son archivos sueltos
-`plugins/*.js` con `export default { id, setup(ctx) }` (API v2). Se descubren solos
-(no declarar en `plugins`: una entrada ahí cuelga el arranque). Se verificaron de punta a punta
-con `opencode run`.
+opencode equivalent of the Claude hooks and `claude-mods/`. They are standalone
+`plugins/*.js` files with `export default { id, setup(ctx) }` (v2 API). They are discovered
+automatically (do not declare them in `plugins`: an entry there hangs startup). They were
+verified end to end with `opencode run`.
 
-| Plugin | Equivale a | Cómo |
+| Plugin | Equivalent to | How |
 |---|---|---|
-| `guardrails.js` | `git-guardrails.mjs` + `guard-protected-branch.mjs` | `ctx.permission.hook("evaluate")` pone `effect = "deny"`. Importa las reglas de `~/.claude/hooks/*.mjs` (una sola fuente, mismos tests y mismas variables `AI_GUARD_*`) |
-| `skill-commands.js` | `/<skill>` de Claude Code | Registra cada skill descubierto como comando (`/git-commit`, `/tdd`, `/design-taste-frontend`…). Adjunta el skill al prompt (`skills: [{id}]`, inyecta el `SKILL.md` completo) y pasa los argumentos como texto. Los skills aparecen tras el arranque, así que el plugin sondea ~12 s y recarga los comandos |
-| `replay.js` | `claude-mods/replay-theater` | `ctx.tool.hook("execute.before/after")` registra los pasos de `write`/`edit`; tool `replay` y comando `/replay`. Sin pane/banda: opencode no tiene API de UI para plugins |
+| `guardrails.js` | `git-guardrails.mjs` + `guard-protected-branch.mjs` | `ctx.permission.hook("evaluate")` sets `effect = "deny"`. Imports the rules from `~/.claude/hooks/*.mjs` (single source, same tests and same `AI_GUARD_*` variables) |
+| `skill-commands.js` | Claude Code's `/<skill>` | Registers every discovered skill as a command (`/git-commit`, `/tdd`, `/design-taste-frontend`…). Attaches the skill to the prompt (`skills: [{id}]`, injects the full `SKILL.md`) and passes the arguments as text. Skills appear after startup, so the plugin polls for ~12 s and reloads the commands |
+| `replay.js` | `claude-mods/replay-theater` | `ctx.tool.hook("execute.before/after")` records the `write`/`edit` steps; `replay` tool and `/replay` command. No pane/band: opencode has no UI API for plugins |
 
-Capas de defensa para shell, de fuera hacia dentro: `policies` (globs, duro) → `permissions`
-(`deny` al final, gana la última) → `guardrails.js` (regex por segmento, rama protegida).
-El plugin cubre lo que los globs no ven (`rm -r -f`, commit en rama protegida, edits en rama
-protegida). Rama protegida: `AI_GUARD_PROTECT_BRANCHES=main` en el entorno **al arrancar el
-servicio** (ver trampas).
+Shell defense layers, outside in: `policies` (globs, hard) → `permissions` (`deny` at the end,
+last rule wins) → `guardrails.js` (per-segment regex, protected branch). The plugin covers what
+globs cannot see (`rm -r -f`, commits on a protected branch, edits on a protected branch).
+Protected branch: `AI_GUARD_PROTECT_BRANCHES=main` in the environment **when the service
+starts** (see gotchas).
 
-Shapes reales (v2.0.31, medidos con un plugin sonda):
+Real shapes (v2.0.31, measured with a probe plugin):
 
-- permiso: `{action, resources[], effect, message?}`; `edit` trae rutas relativas, `shell` el comando
+- permission: `{action, resources[], effect, message?}`; `edit` carries relative paths, `shell` the command
 - tool: `{tool: "write"|"edit"|"shell"|..., id, input, status, result}`;
   `write` = `{path, content}`, `edit` = `{path, oldString, newString}`
-- tool propia: `ctx.tool.transform(e => e.add({name, description, parameters, execute}))`;
-  `execute` devuelve `{content: [{type: "text", text}]}` (un campo `output` sin schema falla)
-- comando: `ctx.command.transform(e => e.add({name, description, execute}))`
-- un tool llamado vía el tool `execute` (Code Mode) también dispara los hooks
+- custom tool: `ctx.tool.transform(e => e.add({name, description, parameters, execute}))`;
+  `execute` returns `{content: [{type: "text", text}]}` (an `output` field without a schema fails)
+- command: `ctx.command.transform(e => e.add({name, description, execute}))`
+- a tool called through the `execute` tool (Code Mode) also fires the hooks
 
-## Trampas
+## Gotchas
 
-- opencode corre un **servicio en segundo plano** (`opencode serve --service`). Carga los plugins
-  y el entorno una sola vez: tras editar un plugin o cambiar `AI_GUARD_*`, mátalo
-  (`kill $(pgrep -f '[o]pencode.exe serve --service')`) y el próximo `opencode` lo relanza.
-- La primera ejecución tras relanzarlo deja el servicio heredando el pipe: `opencode run ... | tail`
-  parece colgado. Redirige a un archivo.
-- `opencode run '/cmd'` no despacha comandos (solo la TUI). Para probarlos sin TUI usa la API:
-  `opencode api command.list` (desde el directorio del proyecto, tras una ejecución), luego
-  `opencode api session.create -d '{}'` y
+- opencode runs a **background service** (`opencode serve --service`). It loads plugins and the
+  environment once: after editing a plugin or changing `AI_GUARD_*`, kill it
+  (`kill $(pgrep -f '[o]pencode.exe serve --service')`) and the next `opencode` relaunches it.
+- The first run after relaunching leaves the service inheriting the pipe: `opencode run ... | tail`
+  looks hung. Redirect to a file instead.
+- `opencode run '/cmd'` does not dispatch commands (TUI only). To test them without the TUI use
+  the API: `opencode api command.list` (from the project directory, after one run), then
+  `opencode api session.create -d '{}'` and
   `opencode api session.command --param sessionID=<id> -d '{"name":"ponytail","text":"..."}'`;
-  `opencode api session.context --param sessionID=<id>` muestra el prompt con el skill adjunto.
-- Los skills nuevos se ven tras reiniciar el servicio (`skill-commands.js` los lee al arrancar).
+  `opencode api session.context --param sessionID=<id>` shows the prompt with the skill attached.
+- New skills show up after restarting the service (`skill-commands.js` reads them at startup).
 
-Resto de shell: `ask`, salvo la lista de lectura permitida (la de `settings.json`).
+Rest of shell: `ask`, except the allowed read list (the one from `settings.json`).
 
-## Notas
+## Notes
 
-- El plugin de caveman (`plugins/caveman/`) es v1: no corre en v2. El modo funciona solo por el
-  bloque de `AGENTS.md`. `opencode.json` no declara `plugins`.
-- `service.json` (password local), `node_modules`, `commands/`, `skills/` y `agents/cavecrew-*`
-  los gestiona el instalador de caveman: fuera del paquete.
-- Verificar: `opencode debug agents`, `opencode debug config`.
-- Sin statusline ni hook de herdr.
+- The caveman plugin (`plugins/caveman/`) is v1: it does not run on v2. The mode works only
+  through the `AGENTS.md` block. `opencode.json` does not declare `plugins`.
+- `service.json` (local password), `node_modules`, `commands/`, `skills/` and `agents/cavecrew-*`
+  are managed by the caveman installer: outside the package.
+- Verify: `opencode debug agents`, `opencode debug config`.
+- No statusline or herdr hook.
