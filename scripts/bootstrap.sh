@@ -108,7 +108,7 @@ main() {
 
   install_node_globals
 
-  # Skills y MCP de Claude Code (necesita npx en PATH, ya cargado arriba).
+  # Skills y plugins de Claude Code (necesita npx en PATH, ya cargado arriba).
   "${SCRIPT_DIR}/install-claude-skills.sh" || true
 
   link_lazygit_macos

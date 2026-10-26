@@ -24,9 +24,6 @@ plus `skills/`. Stow only links into `~/.claude`; `link_claude_profiles()` in
 `CLAUDE_PROFILES`. The real skills live in `~/.claude/skills` (that's where `npx skills add -g`
 writes them); extra profiles get a symlink to it.
 
-MCP servers can't be symlinked — they live inside each profile's `.claude.json` — so
-`scripts/install-claude-skills.sh` registers `context7` once per profile.
-
 To add a profile: append it to `CLAUDE_PROFILES` in both
 `scripts/modules/claude-profiles.sh` and `scripts/install-claude-skills.sh`, re-run the
 bootstrap, add an alias in
@@ -286,13 +283,11 @@ The hooks cost nothing in tokens: they are shell, not prompt. `guard-protected-b
 before spawning git when no branch is protected, and `git-guardrails.mjs` only shells out to git
 for a commit in a repo that set `AI_GUARD_PROTECT_BRANCHES`.
 
-## Skills and MCP servers
+## Skills
 
 `packages/claude-skills.txt` lists GitHub repos installed user-level
 (`~/.claude/skills/`) by `scripts/install-claude-skills.sh` (run by the bootstrap) via
-`npx skills add <repo> -g -a claude-code -s '*' -y`. The same script registers the
-`context7` MCP server (library docs) at user scope with `claude mcp add`, once per profile; that
-lands in each profile's `.claude.json`, which is runtime state and can't be stowed.
+`npx skills add <repo> -g -a claude-code -s '*' -y`.
 
 Security note: third-party skills are instructions injected into the agent — review a
 repo before adding it to the manifest.

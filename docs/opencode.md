@@ -21,7 +21,7 @@ v2 reads the same `~/.config/opencode`, so the package layout does not change.
 
 | File | Claude Code equivalent |
 |---|---|
-| `opencode.json` | `settings.json`: `model`, `permissions`, `policies`, `mcp`, `update` |
+| `opencode.json` | `settings.json`: `model`, `permissions`, `policies`, `update` |
 | `AGENTS.md` | global `CLAUDE.md` + caveman block. v2 only reads `AGENTS.md`, not `CLAUDE.md` |
 | `agents/*.md` | `claude/.claude/agents/*.md` (all 9, same model) |
 | `cli.json` | terminal theme and UI (v2 stores it globally, formerly `tui.json`) |
@@ -36,7 +36,6 @@ read `~/.claude/docs/review-output.md`.
 | `permission.bash` | `permissions` array, `action: shell` (the **last** rule wins) |
 | `small_model` | `agents.title.model` |
 | `autoupdate: false` | `update: "disable"` |
-| `mcp.<n>` + `enabled` | `mcp.servers.<n>` + `disabled` |
 | agent `permission:` | `permissions:` list of `{action, resource, effect}` |
 | agent `temperature`, `effort`, `tools` | do not exist; dropped |
 
