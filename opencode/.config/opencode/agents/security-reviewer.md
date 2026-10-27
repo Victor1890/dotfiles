@@ -1,7 +1,7 @@
 ---
 description: Review changed code adversarially for injection, data leakage, auth holes, and privacy violations. Apply when the diff touches user input, URL or query construction, cookies, auth, secrets, raw HTML rendering, payments, or tracking.
 mode: subagent
-model: opencode/mimo-v2.6-flash-free
+model: opencode/beam-free#xhigh
 permissions:
   - action: edit
     resource: "*"

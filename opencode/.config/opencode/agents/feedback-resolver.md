@@ -1,7 +1,7 @@
 ---
 description: Takes a critique or a list of negative feedback and turns it into concrete, prioritized, actionable fixes (exact file, exact change). Use after a critical review (e.g. the contrarian agent) has surfaced problems, to move from objections to an action plan — including the honest option of building nothing.
 mode: subagent
-model: opencode/mimo-v2.6-flash-free
+model: opencode/glm-5.3-flash-free#high
 permissions:
   - action: edit
     resource: "*"

@@ -1,7 +1,7 @@
 ---
 description: Review changed code for runtime cost, bundle weight, and rendering efficiency. Apply when the diff touches loops over data, queries, caching, watchers or effects, event handlers, new dependencies, or asset imports.
 mode: subagent
-model: opencode/mimo-v2.6-flash-free
+model: opencode/deepseek-v4.1-flash-free#high
 permissions:
   - action: edit
     resource: "*"

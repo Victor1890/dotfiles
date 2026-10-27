@@ -1,8 +1,19 @@
 # opencode
 
 Stow package `opencode/` → `~/.config/opencode/`. Mirrors the Claude Code config
-(`docs/claude-code.md`), with a single model for everything: `opencode/mimo-v2.6-flash-free`
-(MiMo-V2.6-Flash via opencode's built-in provider; no external API key or `providers`).
+(`docs/claude-code.md`), with free models from opencode's built-in provider (no external API key or `providers`).
+Picked from `opencode api model.list` by specs (no benchmarks exist). Reasoning effort goes in
+the model string as `#variant`, mirroring the Claude `effort:` field.
+
+| Tier (Claude) | Agents | Model |
+|---|---|---|
+| deep (opus) | plan, architecture-reviewer, security-reviewer | `beam-free#high` / `#xhigh` (1M ctx, ladder low..max) |
+| second opinion | contrarian | `flint-40b-free#high` (different model than the plan it critiques) |
+| mid (sonnet) | general, performance-reviewer | `deepseek-v4.1-flash-free#high` (default model) |
+| mid | feedback-resolver | `glm-5.3-flash-free#high` |
+| light (haiku) | explore, summarizer, title | `nemotron-3.5-lightning-free` (no variants) |
+
+deepseek and glm only have `low`/`high`/`max`; there is no `medium`.
 
 **v2 format required.** Guide: <https://opencode.ai/v2/docs/migrate-v1/>. v1 keys
 (`permission`, `agent`, `plugin`, `autoupdate`, `small_model`, `tui.json`) are normalized in
@@ -37,7 +48,8 @@ read `~/.claude/docs/review-output.md`.
 | `small_model` | `agents.title.model` |
 | `autoupdate: false` | `update: "disable"` |
 | agent `permission:` | `permissions:` list of `{action, resource, effect}` |
-| agent `temperature`, `effort`, `tools` | do not exist; dropped |
+| agent `effort` | `model: opencode/<model>#<variant>` (only variants the model lists) |
+| agent `temperature`, `tools` | do not exist; dropped |
 
 ## Agents
 

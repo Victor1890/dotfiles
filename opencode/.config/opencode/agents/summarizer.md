@@ -1,7 +1,7 @@
 ---
 description: Compress verbose output (test logs, build output, large files, command output) into a concise digest. Use to keep raw dumps out of the main conversation.
 mode: subagent
-model: opencode/mimo-v2.6-flash-free
+model: opencode/nemotron-3.5-lightning-free
 permissions:
   - action: edit
     resource: "*"

@@ -1,7 +1,7 @@
 ---
 description: Review changed code for structural soundness — module boundaries, separation of concerns, API and contract changes, error handling, and test coverage of new paths. Apply when the diff adds modules, changes shared signatures, or crosses layer boundaries.
 mode: subagent
-model: opencode/mimo-v2.6-flash-free
+model: opencode/beam-free#high
 permissions:
   - action: edit
     resource: "*"
