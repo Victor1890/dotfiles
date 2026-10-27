@@ -1,0 +1,52 @@
+# AGENTS.md
+
+Dotfiles multiplataforma (Ubuntu/WSL, Fedora/Bazzite, Arch/Omarchy, macOS) gestionados como
+paquetes de [GNU Stow](https://www.gnu.org/software/stow/).
+
+Este archivo es solo un **índice**. La documentación real vive en `README.md` y `docs/`; no
+la dupliques aquí. Antes de cambiar algo, lee lo que corresponda en lugar de re-escanear el
+repo entero.
+
+## Empieza por aquí
+
+**`README.md`** ya cubre: estructura del repo, cómo enlaza Stow, el flujo de
+`scripts/bootstrap.sh`, los package lists (`packages/*.txt`) y las notas por plataforma.
+
+## Qué leer según la tarea
+
+| Si vas a tocar… | Lee |
+|---|---|
+| Estructura del repo / aplicar dotfiles con Stow | `docs/shell-and-dotfiles.md` |
+| bash, prompt, aliases o funciones | `docs/shell-and-dotfiles.md` + `bash/.config/bash/*.sh` |
+| nvim (LazyVim) | `docs/nvim.md` |
+| tmux | `docs/tmux.md` |
+| herdr, `nih` | `docs/herdr.md` |
+| git / ssh | `docs/git-and-ssh.md` |
+| lazygit | `docs/lazygit.md` |
+| VS Code | `docs/vscode.md` |
+| Claude Code (settings, agentes, skills, hooks) | `docs/claude-code.md` |
+| opencode (modelo, agentes, permisos) | `docs/opencode.md` |
+| Node.js | `docs/nodejs.md` |
+| CoolerControl (perfiles de temperatura, API) | `docs/coolercontrol-api.md` (inglés) |
+| Setup de una plataforma concreta | `docs/{ubuntu-wsl,bazzite,omarchy,macos-setup}.md` |
+| Apps/Windows Terminal nativos en Windows (host, no WSL) | `docs/windows-host.md` |
+
+## Dónde editar
+
+- **Config de una herramienta**: su paquete Stow, espejando la ruta de `$HOME`
+  (p.ej. `tmux/.config/tmux/tmux.conf`, `git/.gitconfig`).
+- **bash** (modular): `~/.bashrc` carga `~/.config/bash/*.sh`
+  (`exports`, `path`, `plugins`, `completion`, `history`, `aliases`,
+  `functions`, `integrations`, `git`).
+- **Instalación / enlazado**: `scripts/bootstrap.sh` y los manifiestos `packages/*.txt`.
+
+## Añadir un paquete Stow nuevo
+
+1. Crea `<tool>/` espejando la estructura de `$HOME` (p.ej. `<tool>/.config/<tool>/...`).
+2. Añádelo al array `STOW_PACKAGES` en `scripts/modules/stow.sh` para que se auto-enlace.
+3. Si trae paquetes que instalar, añádelos a los manifiestos `packages/*.txt` por gestor.
+
+## Notas
+
+- `.opencode/` está en `.gitignore` (estado local de sesión; no se versiona).
+- Mantén este archivo corto: es un índice, no un espejo de la documentación.
