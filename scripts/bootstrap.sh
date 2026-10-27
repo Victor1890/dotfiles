@@ -81,6 +81,7 @@ main() {
   ensure_herdr
   ensure_opencode
   stow_packages
+  sync_opencode_skills
   link_claude_profiles
   link_claude_mods
   ensure_coolercontrol_profiles

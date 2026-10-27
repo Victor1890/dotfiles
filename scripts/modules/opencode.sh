@@ -25,3 +25,17 @@ ensure_opencode() {
   fi
   rm -f "${tmp}"
 }
+
+# Copies every skill from ~/.claude/skills (real files, symlinks followed) into
+# ~/.config/opencode/skills. Existing skills are kept, so the caveman ones
+# (managed by their installer) are never overwritten. Idempotent.
+sync_opencode_skills() {
+  local src="${HOME}/.claude/skills" dst="${HOME}/.config/opencode/skills" s name
+  [[ -d "${src}" ]] || return 0
+  mkdir -p "${dst}"
+  for s in "${src}"/*/; do
+    name="$(basename "${s}")"
+    [[ -f "${s}SKILL.md" && ! -e "${dst}/${name}" ]] || continue
+    cp -rL "${s}" "${dst}/${name}"
+  done
+}

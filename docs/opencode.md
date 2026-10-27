@@ -37,7 +37,7 @@ v2 reads the same `~/.config/opencode`, so the package layout does not change.
 | `agents/*.md` | `claude/.claude/agents/*.md` (all 9, same model) |
 | `cli.json` | terminal theme and UI (v2 stores it globally, formerly `tui.json`) |
 
-Skills are **not copied**: v2 discovers `~/.claude/skills/*/SKILL.md`. The reviewers still
+`sync_opencode_skills` (`scripts/modules/opencode.sh`, called by bootstrap after stowing) copies `~/.claude/skills/*` into `~/.config/opencode/skills` (skips existing ones). v2 also discovers `~/.claude/skills/*/SKILL.md` on its own. The reviewers still
 read `~/.claude/docs/review-output.md`.
 
 ## v1 → v2 mapping used here
