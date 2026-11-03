@@ -113,7 +113,8 @@
   "enabledPlugins": {
     "cloudflare@cloudflare": true,
     "caveman@caveman": true,
-    "replay-theater@dotfiles-mods": true
+    "replay-theater@dotfiles-mods": true,
+    "mattpocock-skills@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {

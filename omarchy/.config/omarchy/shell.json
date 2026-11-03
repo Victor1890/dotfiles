@@ -37,7 +37,12 @@
       ],
       "right": [
         {
-          "id": "omarchy.agents"
+          "id": "omarchy.agents",
+          "providers": {
+            "copilot": {
+              "enabled": false
+            }
+          }
         },
         {
           "id": "omarchy.tray"
@@ -64,8 +69,9 @@
     "transparent": false
   },
   "idle": {
-    "lock": 300,
-    "screensaver": 150
+    "lock": 999999,
+    "screensaver": 999999
   },
-  "version": 1
+  "version": 1,
+  "plugins": []
 }
