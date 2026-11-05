@@ -73,16 +73,6 @@
             "command": "bash \"$HOME/.claude/hooks/load-agents-md.sh\""
           }
         ]
-      },
-      {
-        "matcher": "^(startup|resume|clear|compact|fork)$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$HOME/.claude/hooks/herdr-agent-state.sh\" session",
-            "timeout": 10
-          }
-        ]
       }
     ],
     "PreToolUse": [
@@ -92,6 +82,14 @@
           {
             "type": "command",
             "command": "node \"$HOME/.claude/hooks/git-guardrails.mjs\" --runtime=claude"
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/guard-worktree-path.py\""
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/guard-delete-outside.py\""
           }
         ]
       },
@@ -103,36 +101,36 @@
             "command": "node \"$HOME/.claude/hooks/guard-protected-branch.mjs\""
           }
         ]
+      },
+      {
+        "matcher": "Bash|Read|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/guard-secrets.py\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|MultiEdit|Write|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/guard-key-literals.py\""
+          }
+        ]
       }
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "bash \"$HOME/.claude/hooks/statusline.sh\""
-  },
   "enabledPlugins": {
-    "cloudflare@cloudflare": true,
-    "caveman@caveman": true,
-    "replay-theater@dotfiles-mods": true,
-    "mattpocock-skills@claude-plugins-official": true
+    "mattpocock-skills@claude-plugins-official": true,
+    "caveman@caveman": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
       "source": {
         "source": "github",
         "repo": "JuliusBrussee/caveman"
-      }
-    },
-    "cloudflare": {
-      "source": {
-        "source": "github",
-        "repo": "cloudflare/skills"
-      }
-    },
-    "dotfiles-mods": {
-      "source": {
-        "source": "directory",
-        "path": "/home/victor1890/.claude/mods"
       }
     }
   },
