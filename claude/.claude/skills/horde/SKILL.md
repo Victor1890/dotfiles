@@ -1,7 +1,7 @@
 ---
 name: horde
-description: "Implement tickets with builder agents, in any tracker setup. Batch mode: parallel builders, one worktree per ticket, via herdr. Solo mode: one ticket, end to end, autonomous, notes kept local. Use when the user says build the tickets, unleash the horde, orchestrate agents on this project, work this ticket on its own, or invokes /horde."
-argument-hint: "[ticket ids, path or text] [--base <branch>] [--solo] [--no-checks] [max parallel builders]"
+description: "Implement tickets with builder agents, in any tracker setup. One ticket, end to end, autonomous, notes kept local. Use when the user says build the tickets, unleash the horde, orchestrate agents on this project, work this ticket on its own, or invokes /horde."
+argument-hint: "[ticket ids, path or text] [--base <branch>] [--no-checks]"
 effort: medium
 ---
 
@@ -11,10 +11,7 @@ You orchestrate. Builders write the code. You merge ticket branches into the bas
 
 Rule: one ticket = one builder session at a time.
 
-- **Batch**: several tickets, one worktree each, parallel builders via herdr.
-- **Solo**: one ticket, no map, no tracker writes, notes stay local.
-
-Solo when `--solo` is passed, or `$ARGUMENTS` names exactly one ticket, or the overlap check (section 2) says so.
+- One ticket, no map, no tracker writes, notes stay local.
 
 Three anchors keep the loop honest. None of them is negotiable mid-run:
 
@@ -36,7 +33,6 @@ git check-ignore -q .scratch/ && echo scratch-ignored
 - Base = `--base <branch>`, else the current branch. A base that is protected, or equals the default branch: stop and ask for a feature branch.
 - `.scratch/` must be git-ignored. Not ignored: ask before adding it to `.gitignore`.
 - Learn where tickets live: read `AGENTS.md` first. If the repo has `docs/agents/issue-tracker.md` (from a project whose `ai-project-init` scaffolded one), follow it. Neither exists: fall back to the defaults in section 2.
-- Batch only: `test "${HERDR_ENV:-}" = 1` and `herdr status` shows the server running. Outside a herdr pane, batch is unavailable: offer solo.
 - GitHub tracker only: `gh auth status` must pass.
 - Missing `.claude/settings.json`: run `ai-project-init`. It must set `AI_GUARD_PROTECT_BRANCHES` to the default branch and allow the repo's test, lint, build commands. A missing permission blocks a builder and interrupts the user.
 - Note whether `.claude/settings.json` is tracked (`git ls-files --error-unmatch .claude/settings.json`). A worktree only has the tracked copy; section 4 copies an untracked one in.
@@ -56,9 +52,7 @@ No tracker found and none named in `$ARGUMENTS`: stop and ask the user where tic
 - Skip a ticket that names an open blocker (`Blocked by`).
 - User named tickets in `$ARGUMENTS`: use those, still skipping blocked ones.
 - A ticket the repo tracks outside the agent tracker (Jira key, pasted text, a plan file): solo only. Read it, never write back.
-- Default to **1** builder. Go to 2-3 only if the user asked or the first one finished clean. Cost scales with agents × turns × context.
-- Overlap check: list the files each ticket will touch. All tickets overlap: recommend `/tdd` on the base directly, then let the user pick. Some overlap: those tickets run in sequence, never in parallel.
-- Independence check: run two tickets side by side only when neither reads the other's output. A ticket that needs another's code is a real dependency: sequence it.
+- One ticket at a time. Several tickets: run them in sequence.
 - Show the chosen list and wait for a yes before launching. Solo with one named ticket: no wait.
 
 ## 3. Conventions
@@ -73,7 +67,7 @@ Read once, paste into every builder prompt:
 
 Skip with `--no-checks`; say in the hand-back that the ticket ran unchecked.
 
-Per ticket, on its branch (batch: the worktree; solo: the base), before any builder runs:
+Per ticket, on its branch (the base), before any builder runs:
 
 1. Dispatch a fresh `general-purpose` agent with the ticket body and the conventions. It writes tests for the acceptance criteria only, in the repo's existing test layout, and runs them. They must fail for the right reason (missing behaviour, not a syntax or import error).
 2. A criterion that no automated test can express: list it as **manual** instead of faking a test.
@@ -84,50 +78,11 @@ The check writer never builds; the builder never writes checks. That split is th
 
 ## 5. Launch builders
 
-### Batch
-
-```bash
-herdr worktree create --branch feat/<id>-<slug> --base <base> --label "<id>" --no-focus
-```
-
-- Read the workspace id, root pane id, and worktree path from the JSON response. Never guess them.
-- `.claude/settings.json` untracked (section 1): `cp` it into the same path in the worktree.
-- Write the checks (section 4) in the worktree, then:
-
-```bash
-herdr agent start b-<id> --kind claude --pane <pane-id> --timeout 60000 -- --model sonnet
-herdr agent prompt b-<id> "$(cat .scratch/horde/<id>/prompt.md)"
-herdr agent wait b-<id> --until working --until blocked --timeout 15000
-```
-
-- Agent names must match `[a-z][a-z0-9_-]{0,31}`: lowercase the ticket id.
-- Write each prompt to `.scratch/horde/<id>/prompt.md` in the base checkout first. It keeps quoting out of the shell and leaves a record.
-- The pane must sit at a shell prompt. `agent start` fails or returns `agent_not_ready`: run `herdr agent read b-<id> --source recent-unwrapped --lines 60`. A folder-trust or permission dialog is the user's to answer; tell them, never answer it. Do not retry in a loop.
-- `agent_prompt_stalled` or a timeout does not prove the prompt was lost. Read the pane before sending anything again.
-
-**Monitor.** After every builder is working, start one background wait per builder (Bash with `run_in_background`, so the harness wakes you when it settles):
-
-```bash
-herdr agent wait b-<id> --timeout 5400000
-```
-
-Then `herdr agent get b-<id>` to see which state it settled in:
-
-| State | Meaning | Do |
-|---|---|---|
-| `idle` / `done` | Turn finished | Review gate (section 6) |
-| `blocked` | Approval or question dialog | `agent read`, tell the user what it needs. Never answer for them |
-| `unknown` | Cannot classify | `agent read`; does not prove completion |
-| wait timed out | Still working after 90 min | `agent read`, report progress, start a new wait |
-
-While a builder works, leave its pane alone. `herdr agent list` is the cheap overview when the user asks for status.
-
-Merge each passed ticket branch into the base yourself, one at a time, tests green after each. No push.
-
-### Solo
+### Builder
 
 - One builder on the base in place: no worktree, no new branch.
-- Run it in this session with `tdd`, or in a herdr pane as above when herdr is running.
+- Dispatch a fresh `general-purpose` agent with the prompt below, or run it in this session with `tdd`.
+- Merge a passed ticket into the base only after the review gate. No push.
 - Notes go to `.scratch/<slug>/notes.md` (plan, decisions, test results). `.scratch/` stays untracked.
 - Never create, comment on, or transition a ticket in the external tracker.
 
@@ -144,7 +99,7 @@ The ticket body verbatim, then:
 
 ## 6. Review gate
 
-When a builder settles in `idle` or `done`:
+When the builder finishes:
 
 1. Reply starts with `CHECK-DISPUTE:`: stop that ticket and show the user. Only the user changes a frozen check, through the check writer, with a new `CHECKS_SHA`.
 2. Frozen set untouched: `git diff --quiet <CHECKS_SHA> HEAD -- <frozen set>` and `git status --short -- <frozen set>` empty. A change fails the round as `checks-modified`; revert those files before the next round.
@@ -153,7 +108,7 @@ When a builder settles in `idle` or `done`:
 5. Gate: checks green, frozen set intact, 0 `blocker` and 0 `issue` findings (see `~/.claude/docs/review-output.md`).
 6. Log the round (section 7).
 7. Gate fails, round < 3: pick the builder for the next round.
-   - Same `failure` as the previous round: **plateau**. The builder is stuck in a habit and its context carries it. Split a fresh pane in the worktree (`herdr pane split --pane <pane-id> --direction down --cwd <worktree> --no-focus`), start `b-<id>-r<round>` there, and prompt it with the ticket, the frozen set, `git log <CHECKS_SHA>..HEAD`, and a three-line summary of what failed and what was already tried. Leave the old pane for the user to inspect.
+   - Same `failure` as the previous round: **plateau**. The builder is stuck in a habit and its context carries it. Dispatch a fresh builder agent (`b-<id>-r<round>`) and prompt it with the ticket, the frozen set, `git log <CHECKS_SHA>..HEAD`, and a three-line summary of what failed and what was already tried.
    - Otherwise: send the findings to the same builder.
 8. Round 3 still failing: stop and report. Do not loosen the gate, and do not weaken a check to pass it.
 
@@ -183,11 +138,10 @@ The log is evidence for the user, not a target for you. Never shape a fix to mak
 
 ## 8. Hand back
 
-Per ticket, one line: ticket, branch, path, checks result, review rounds, gate pass or fail, and whether a plateau restart happened.
+Per ticket, one line: ticket, branch, checks result, review rounds, gate pass or fail, and whether a plateau restart happened.
 
 - Open a PR only if the user asks (`create-pr` skill). A base that already has a PR needs none.
 - Several runs logged: point the user at `results.tsv` failures that repeat across tickets. They are candidates for the repo's `AGENTS.md`; propose the line, never add it yourself.
-- Batch cleanup after the user merges: `herdr worktree remove --workspace <id>`, then `git branch -d <branch>`.
 
 ## Never
 

@@ -6,7 +6,7 @@ set -euo pipefail
 #
 # Este script es solo el orquestador: detecta el OS y llama, en orden, a los
 # pasos instalables/opcionales, cada uno en su propio archivo bajo
-# scripts/modules/ (stow, herdr, perfiles de Claude, CoolerControl, teclado,
+# scripts/modules/ (stow, perfiles de Claude, CoolerControl, teclado,
 # .wslconfig, lazygit en macOS, node). Las utilidades genéricas que
 # esos módulos comparten (log, os_detect, backup_if_real…) viven en
 # scripts/lib/. Añadir un paso nuevo es: crear su módulo y llamarlo en main().
@@ -78,7 +78,6 @@ main() {
 
   ensure_locale
   ensure_stow
-  ensure_herdr
   ensure_opencode
   stow_packages
   sync_opencode_skills

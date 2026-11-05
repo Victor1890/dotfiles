@@ -82,7 +82,7 @@ To link (or unlink) individual packages yourself:
 
 ```sh
 cd ~/dotfiles
-stow bash git starship nvim tmux herdr shell lazygit claude opencode   # link everything
+stow bash git starship nvim tmux shell lazygit claude opencode   # link everything
 stow nvim                                    # link just one package
 stow -D nvim                                 # unlink (remove symlinks)
 stow -R bash                                  # restow (refresh) after changes

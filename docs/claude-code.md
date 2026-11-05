@@ -234,7 +234,7 @@ coexist. Unprefixed on purpose: a project skill of the same name shadows the glo
 | `doc-write` | House style for persistent markdown: rules first, one idea per line, no filler |
 | `git-commit` | Commit using the convention inferred from `git log`, not an imposed one |
 | `create-pr` | Open a PR with title, template, labels and base inferred from recent merged PRs; draft approved before creating. Its `pr-template.md` is only a fallback: the repo's template wins |
-| `horde` | Implement several tickets in parallel with builder agents in `herdr` worktrees (batch), or one ticket end to end (solo). Frozen checks + a fresh reviewer gate each round. Ticket source defaults to GitHub Issues or `.scratch/*/issues/*.md`; a project can override it with `docs/agents/issue-tracker.md` |
+| `horde` | Implement a ticket end to end with a builder agent (solo). Frozen checks + a fresh reviewer gate each round. Ticket source defaults to GitHub Issues or `.scratch/*/issues/*.md`; a project can override it with `docs/agents/issue-tracker.md` |
 
 ### Workflow and agents
 

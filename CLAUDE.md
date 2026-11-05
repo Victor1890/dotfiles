@@ -20,7 +20,6 @@ repo entero.
 | bash, prompt, aliases o funciones | `docs/shell-and-dotfiles.md` + `bash/.config/bash/*.sh` |
 | nvim (LazyVim) | `docs/nvim.md` |
 | tmux | `docs/tmux.md` |
-| herdr, `nih` | `docs/herdr.md` |
 | git / ssh | `docs/git-and-ssh.md` |
 | lazygit | `docs/lazygit.md` |
 | VS Code | `docs/vscode.md` |

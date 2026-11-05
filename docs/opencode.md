@@ -107,4 +107,4 @@ Rest of shell: `ask`, except the allowed read list (the one from `settings.json`
 - `service.json` (local password), `node_modules`, `commands/`, `skills/` and `agents/cavecrew-*`
   are managed by the caveman installer: outside the package.
 - Verify: `opencode debug agents`, `opencode debug config`.
-- No statusline or herdr hook.
+- No statusline hook.
