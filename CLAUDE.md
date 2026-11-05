@@ -19,7 +19,6 @@ repo entero.
 | Estructura del repo / aplicar dotfiles con Stow | `docs/shell-and-dotfiles.md` |
 | bash, prompt, aliases o funciones | `docs/shell-and-dotfiles.md` + `bash/.config/bash/*.sh` |
 | nvim (LazyVim) | `docs/nvim.md` |
-| tmux | `docs/tmux.md` |
 | git / ssh | `docs/git-and-ssh.md` |
 | lazygit | `docs/lazygit.md` |
 | VS Code | `docs/vscode.md` |
@@ -33,7 +32,7 @@ repo entero.
 ## Dónde editar
 
 - **Config de una herramienta**: su paquete Stow, espejando la ruta de `$HOME`
-  (p.ej. `tmux/.config/tmux/tmux.conf`, `git/.gitconfig`).
+  (p.ej. `lazygit/.config/lazygit/config.yml`, `git/.gitconfig`).
 - **bash** (modular): `~/.bashrc` carga `~/.config/bash/*.sh`
   (`exports`, `path`, `plugins`, `completion`, `history`, `aliases`,
   `functions`, `integrations`, `git`).

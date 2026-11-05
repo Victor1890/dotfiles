@@ -1,6 +1,6 @@
 # ============================================================================
 # UTILITY FUNCTIONS
 # ============================================================================
-# Shim: ex, mkcd, glog, nic, claude-profile… son las de bash. Ver
+# Shim: ex, mkcd, glog, claude-profile… son las de bash. Ver
 # bash/.config/bash/functions.sh.
 [[ -r "${BASH_CONFIG_DIR}/functions.sh" ]] && source "${BASH_CONFIG_DIR}/functions.sh"

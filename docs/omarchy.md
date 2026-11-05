@@ -347,4 +347,4 @@ hyprctl devices -j | jq -r '.keyboards[] | "\(.name)\t\(.layout)\t\(.active_keym
   Sin ese fichero, `ensure_coolercontrol_profiles` no aprovisiona y avisa en
   el log del bootstrap; una vez creado el token, re-ejecuta
   `scripts/bootstrap.sh` (o a mano: `coolercontrol-provision`).
-- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim tmux shell lazygit`.
+- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim shell lazygit`.

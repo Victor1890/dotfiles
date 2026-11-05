@@ -28,7 +28,6 @@ dotfiles/
 ├── starship/       # .config/starship.toml (prompt)
 ├── git/            # .gitconfig + .config/git/ignore
 ├── nvim/           # .config/nvim/ (LazyVim distribution)
-├── tmux/           # .config/tmux/tmux.conf
 ├── lazygit/        # .config/lazygit/config.yml (terminal UI for git)
 ├── shell/          # .profile
 ├── claude/         # .claude/ (Claude Code settings, agents, global CLAUDE.md; shared across profiles)
@@ -82,7 +81,7 @@ To link (or unlink) individual packages yourself:
 
 ```sh
 cd ~/dotfiles
-stow bash git starship nvim tmux shell lazygit claude opencode   # link everything
+stow bash git starship nvim shell lazygit claude opencode   # link everything
 stow nvim                                    # link just one package
 stow -D nvim                                 # unlink (remove symlinks)
 stow -R bash                                  # restow (refresh) after changes
@@ -126,7 +125,6 @@ Step-by-step guides for a fresh machine live in [`docs/`](docs):
 | [nodejs.md](docs/nodejs.md) | Node.js via nvm and global modules |
 | [vscode.md](docs/vscode.md) | VS Code settings and extensions |
 | [nvim.md](docs/nvim.md) | Neovim (LazyVim) setup, requirements and basics |
-| [tmux.md](docs/tmux.md) | tmux prefix, panes/windows and copy mode |
 | [lazygit.md](docs/lazygit.md) | lazygit keybindings and workflows |
 | [claude-code.md](docs/claude-code.md) | Claude Code profiles, agents, skills, hooks and token costs |
 | [opencode.md](docs/opencode.md) | opencode v2 config: MiMo model, agents, permissions, plugins, gotchas |
