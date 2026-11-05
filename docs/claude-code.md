@@ -313,41 +313,6 @@ Re-enable a single one with `mv ~/.claude/skills-disabled/<skill> ~/.claude/skil
 the plugin brings the mode hooks and statusline badge. Don't also add `JuliusBrussee/caveman` to
 `packages/claude-skills.txt`, or its skills are listed twice.
 
-### `claude-mods/`: a local plugin marketplace
-
-For a mod with no sensible GitHub home — vendored from elsewhere, or written for this
-machine only — `claude-mods/` is a `"source": "directory"` marketplace declared in
-`settings.json`:
-
-```json
-"extraKnownMarketplaces": {
-  "dotfiles-mods": {
-    "source": { "source": "directory", "path": "~/.claude/mods" }
-  }
-}
-```
-
-`claude-mods/.claude-plugin/marketplace.json` lists the plugins; each one is a folder with its
-own `.claude-plugin/plugin.json` and a `hooks/hooks.json` pointing at its module(s) — the same
-shape a GitHub-hosted plugin has, just read from this path instead of cloned. **Not** a Stow
-package: the bootstrap symlink above is all it needs. Not in `STOW_PACKAGES`.
-
-`~/.claude/mods` is a symlink to the repo's `claude-mods/`, created by `link_claude_mods()` in
-`scripts/modules/claude-profiles.sh` (called from `bootstrap.sh`). That keeps `settings.json`
-independent of where the repo is cloned; `~` is expanded by Claude Code. Declaring the
-marketplace in `settings.json` is not enough to install the plugin, so
-`scripts/install-claude-skills.sh` (`register_mods`) runs `claude plugin marketplace add` and
-`claude plugin install replay-theater@dotfiles-mods` per profile. Both are idempotent.
-
-| Plugin | What it does |
-|---|---|
-| `replay-theater` | `/replay`: step through the file edits Claude made in the last turn, one diff at a time. Vendored from `anthropics/claude-code-playground` (see its `VENDORED.md` for the commit and the security read: file reads only, no network/process/env/model calls) |
-
-Rule for any third-party mod: **copy** it into this repo and review it (which `$.*` calls it
-makes; `claude plugin validate` lists them), never install it from the upstream repo directly —
-an upstream update could then change what runs without this repo's history showing it. Edited a
-file under `claude-mods/`: `/reload-plugins` picks it up without restarting the session.
-
 To re-measure after adding or removing skills:
 
 ```sh

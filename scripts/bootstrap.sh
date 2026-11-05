@@ -83,7 +83,6 @@ main() {
   stow_packages
   sync_opencode_skills
   link_claude_profiles
-  link_claude_mods
   ensure_coolercontrol_profiles
 
   # Node antes del sync para que Mason pueda instalar el LSP de TypeScript.

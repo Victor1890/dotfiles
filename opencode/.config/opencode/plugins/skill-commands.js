@@ -9,7 +9,7 @@
 // registry once the list stops growing.
 
 // Commands that already exist or would shadow built-ins.
-const RESERVED = new Set(["init", "review", "replay", "opencode", "report"])
+const RESERVED = new Set(["init", "review", "opencode", "report"])
 const POLL_MS = 1500
 const POLL_MAX = 8
 

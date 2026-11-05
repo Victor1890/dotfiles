@@ -56,9 +56,9 @@ read `~/.claude/docs/review-output.md`.
 `Explore` → `explore`, `general-purpose` → `general`, `Plan` → `plan` (primary); they override
 the built-ins by ID. Read-only agents have `edit` denied.
 
-## Plugins (adapter for `claude-mods` and hooks)
+## Plugins (adapter for hooks)
 
-opencode equivalent of the Claude hooks and `claude-mods/`. They are standalone
+opencode equivalent of the Claude hooks. They are standalone
 `plugins/*.js` files with `export default { id, setup(ctx) }` (v2 API). They are discovered
 automatically (do not declare them in `plugins`: an entry there hangs startup). They were
 verified end to end with `opencode run`.
@@ -67,7 +67,6 @@ verified end to end with `opencode run`.
 |---|---|---|
 | `guardrails.js` | `git-guardrails.mjs` + `guard-protected-branch.mjs` | `ctx.permission.hook("evaluate")` sets `effect = "deny"`. Imports the rules from `~/.claude/hooks/*.mjs` (single source, same tests and same `AI_GUARD_*` variables) |
 | `skill-commands.js` | Claude Code's `/<skill>` | Registers every discovered skill as a command (`/git-commit`, `/tdd`, `/design-taste-frontend`…). Attaches the skill to the prompt (`skills: [{id}]`, injects the full `SKILL.md`) and passes the arguments as text. Skills appear after startup, so the plugin polls for ~12 s and reloads the commands |
-| `replay.js` | `claude-mods/replay-theater` | `ctx.tool.hook("execute.before/after")` records the `write`/`edit` steps; `replay` tool and `/replay` command. No pane/band: opencode has no UI API for plugins |
 
 Shell defense layers, outside in: `policies` (globs, hard) → `permissions` (`deny` at the end,
 last rule wins) → `guardrails.js` (per-segment regex, protected branch). The plugin covers what
