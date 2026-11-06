@@ -548,23 +548,6 @@ ensure_omarchy_webapps() {
   done < "${OMARCHY_WEBAPPS}"
 }
 
-# CoolerControl controla el AIO NZXT Kraken (bomba/ventiladores + pantalla LCD) vía
-# su daemon. Se instala como paquete (arch-apps.txt) con sus deps opcionales
-# liquidctl y lm_sensors; aquí solo garantizamos el servicio activo. Idempotente.
-# Los perfiles/modos de temperatura (Silencio/Rendimiento) viven en el paquete
-# stow `coolercontrol/` (ver ensure_coolercontrol_profiles en bootstrap.sh y
-# docs/omarchy.md).
-ensure_coolercontrol() {
-  exists systemctl || return 0
-  if systemctl is-enabled --quiet coolercontrold.service 2>/dev/null; then
-    log "coolercontrold ya está habilitado; se omite."
-  else
-    log "Habilitando coolercontrold (Kraken + LCD)…"
-    sudo systemctl enable --now coolercontrold.service \
-      || log "No se pudo habilitar coolercontrold (¿instalado?); revisa manual."
-  fi
-}
-
 # El módulo i2c-dev expone los buses SMBus que OpenRGB necesita para el RGB de
 # RAM y placa base. Se persiste en modules-load.d para que cargue en cada arranque.
 ensure_i2c_dev() {
@@ -576,32 +559,6 @@ ensure_i2c_dev() {
     echo i2c-dev | sudo tee "${conf}" >/dev/null || true
   fi
   lsmod | grep -q '^i2c_dev' || sudo modprobe i2c-dev || true
-}
-
-# El Nuvoton NCT6687D-R de la placa (fan headers/sensores) no tiene driver en
-# linux-omarchy; coolercontrold lo detecta pero falla el modprobe ("Module
-# nct6687 not found"). nct6687d-dkms-git (arch-apps.txt) lo provee. Se persiste
-# en modules-load.d y, si coolercontrold ya estaba corriendo, se reinicia para
-# que lo detecte (si no, lo detecta solo en su próximo arranque).
-ensure_nct6687() {
-  exists modinfo || return 0
-  modinfo nct6687 >/dev/null 2>&1 || { log "nct6687 no disponible (¿falló el DKMS?); se omite."; return 0; }
-  local conf=/etc/modules-load.d/nct6687.conf just_loaded=0
-  if [[ -f "${conf}" ]]; then
-    log "nct6687 ya persistido (${conf}); se omite."
-  else
-    log "Persistiendo el módulo nct6687 (sensores/fan headers de la placa)…"
-    echo nct6687 | sudo tee "${conf}" >/dev/null || true
-  fi
-  if lsmod | grep -q '^nct6687'; then
-    return 0
-  fi
-  sudo modprobe nct6687 || return 0
-  just_loaded=1
-  if ((just_loaded)) && systemctl is-active --quiet coolercontrold.service 2>/dev/null; then
-    log "Reiniciando coolercontrold para que detecte el NCT6687D-R…"
-    sudo systemctl restart coolercontrold.service || true
-  fi
 }
 
 # Arch/Omarchy: repos oficiales traen lazygit y neovim actuales, así que no
@@ -647,8 +604,6 @@ install_arch() {
     ensure_omarchy_initramfs
     ensure_nvidia_gsp_disabled
     ensure_i2c_dev
-    ensure_nct6687
-    ensure_coolercontrol
   fi
 }
 

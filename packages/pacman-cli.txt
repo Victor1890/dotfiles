@@ -27,11 +27,9 @@ fontconfig
 # en repos oficiales con versión actual; en Omarchy ya presentes (--needed los salta)
 lazygit
 # neovim
-# deps opcionales de CoolerControl (Kraken) + soporte i2c para el RGB de RAM/placa (OpenRGB)
-# liquidctl
-lm_sensors
+# soporte i2c para el RGB de RAM/placa (OpenRGB)
 i2c-tools
-# jq parsea la API de CoolerControl (coolercontrol-provision)
+# jq: parseo de JSON en scripts
 jq
 btop
 dua-cli
