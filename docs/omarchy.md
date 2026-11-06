@@ -264,13 +264,13 @@ hyprctl devices -j | jq -r '.keyboards[] | "\(.name)\t\(.layout)\t\(.active_keym
   - El estado vive en `$XDG_RUNTIME_DIR/omarchy-rgb-off`, que se borra al cerrar
     sesión: tras reiniciar se vuelve al color del tema.
   - El teclado Keychron queda fuera del apagado a propósito. `rgb on` sí lo cubre.
-  - Las velocidades de ventilador no se tocan nunca; siguen siendo de CoolerControl.
+  - Las velocidades de ventilador no se tocan nunca; no son cosa de este repo.
 - El RGB está repartido entre dos herramientas según quién posea el dispositivo:
 
   | Dispositivos | Herramienta | Detalle |
   |---|---|---|
   | RAM Corsair, GPU ZOTAC, Lian Li Strimer, placa MSI, teclado Keychron | `openrgb` | dos pasadas, `--mode direct` y `--mode static`: ningún modo de color fijo es común a todos |
-  | Hub `NZXT RGB & Fan Controller`, canales `led1` y `led2` | `liquidctl` | OpenRGB lo lista, pero `coolercontrold` posee el USB y sus escrituras no llegan |
+  | Hub `NZXT RGB & Fan Controller`, canales `led1` y `led2` | `liquidctl` | OpenRGB lo lista, pero si un daemon externo posee el USB sus escrituras no llegan |
   | Conector RGB externo del Kraken Z53, canal `external` | `liquidctl` | de ahí cuelgan ventiladores que OpenRGB no ve en absoluto |
   | Pantalla LCD del Kraken Z53 | `liquidctl` | `set lcd screen brightness` |
 
@@ -284,67 +284,4 @@ hyprctl devices -j | jq -r '.keyboards[] | "\(.name)\t\(.layout)\t\(.active_keym
   tema están en el `case` de la función `accent()` de `rgb`. El módulo `i2c-dev`
   (RGB de RAM/placa por SMBus) lo persiste el bootstrap en
   `/etc/modules-load.d/i2c-dev.conf`.
-- Refrigeración y Kraken (CoolerControl): `coolercontrol` (en `arch-apps.txt`)
-  controla el AIO NZXT Kraken —bomba, ventiladores y **pantalla LCD**— vía su
-  daemon `coolercontrold`, que el bootstrap habilita (`systemctl enable --now`).
-  Deps opcionales `liquidctl` y `lm_sensors` (en `pacman-cli.txt`) le dan acceso
-  a más sensores. El **contenido de la LCD** (temperatura de líquido/CPU, imagen,
-  reloj) se configura desde la **GUI de CoolerControl**; esa config vive en el
-  daemon (root, fuera de `$HOME`) y no se gestiona por stow. Para exponer todos
-  los sensores del sistema, opcionalmente: `sudo sensors-detect --auto`.
-  `coolercontrold` posee por USB tanto el Kraken como el hub NZXT: OpenRGB lista el
-  hub pero no puede escribirle, así que su iluminación va por `liquidctl`.
-  El Nuvoton NCT6687D-R de la placa (fan headers/sensores) no tiene driver en
-  `linux-omarchy`; sin él, `coolercontrold` loguea `Failed to load module nct6687`
-  al arrancar. Lo provee `nct6687d-dkms-git` (AUR, en `arch-apps.txt`); el bootstrap
-  lo carga y persiste con `ensure_nct6687` en `install-packages.sh`.
-
-- **Perfiles de temperatura** (paquete stow `coolercontrol/`): recién
-  instalado, `coolercontrold` detecta todo el hardware pero llega **sin
-  ninguna curva configurada** (`modes.json` y `calibrations.json` vacíos) —
-  todo el hardware queda en "Unmanaged" (perfil `Identity`), es decir, ningún
-  ventilador ni la bomba reaccionan a la temperatura real. Este paquete lo
-  corrige.
-
-  Canales que realmente se gobiernan (el resto de NZXT/NCT6687 no tiene nada
-  físicamente conectado y no se toca):
-
-  | canal | dispositivo | rol |
-  |---|---|---|
-  | `fan` / `pump` | NZXT Kraken (AIO) | radiador + bomba |
-  | `fan3` | NZXT RGB & Fan Controller | único canal del hub con algo conectado |
-  | `fan1` / `fan2` | GPU (RTX 3080) | vía **NVML** (`nvmlDeviceSetFanSpeed_v2`) — no hace falta Xorg, Coolbits ni `nvidia-settings`, esta sesión es Wayland |
-
-  El tacómetro `fan1` del NCT6687D-R es el mismo eje físico que la bomba del
-  Kraken (cableado al header CPU_FAN de la placa): se lee para diagnóstico,
-  pero su `pwm1` no se toca. `fan2`–`fan8` del NCT6687 y `fan1`/`fan2` del hub
-  NZXT no tienen nada conectado.
-
-  Dos modos, definidos declarativamente en
-  `coolercontrol/.config/coolercontrol-modes/curves.json` (temp→%duty, ahí se
-  ajustan las curvas sin tocar bash):
-  - **Silencio** (por defecto, persiste entre arranques vía `apply_on_boot`
-    del propio daemon): curvas conservadoras, ventiladores inaudibles hasta
-    ~58 °C de CPU / ~52 °C de GPU.
-  - **Rendimiento**: piso de RPM más alto y rampa más agresiva; se activa a
-    mano desde la GUI de CoolerControl cuando haga falta más refrigeración —
-    no hay cambio automático de perfil.
-
-  `coolercontrol/.local/bin/coolercontrol-provision` aplica `curves.json` vía
-  la API REST del daemon (`127.0.0.1:11987`) de forma idempotente (crea o
-  actualiza functions/profiles/modes por nombre; los `device_uid` se resuelven
-  en cada ejecución, nunca se hardcodean, porque son hashes que cambian si se
-  mueve el Kraken de puerto USB o cambia la GPU).
-
-  **Token de la API** (paso manual, una sola vez, fuera del repo): la API
-  exige un Bearer token con permiso de escritura. Créalo desde la GUI de
-  CoolerControl (Settings → Access Tokens) y guárdalo en
-  `~/.local/state/coolercontrol-modes/api-token` con permisos `600`:
-  ```sh
-  install -d -m 700 ~/.local/state/coolercontrol-modes
-  umask 077; printf '%s' '<TOKEN>' > ~/.local/state/coolercontrol-modes/api-token
-  ```
-  Sin ese fichero, `ensure_coolercontrol_profiles` no aprovisiona y avisa en
-  el log del bootstrap; una vez creado el token, re-ejecuta
-  `scripts/bootstrap.sh` (o a mano: `coolercontrol-provision`).
-- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim tmux shell lazygit`.
+- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim shell lazygit`.

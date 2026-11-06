@@ -61,4 +61,4 @@ Select it in your terminal (Konsole/Ptyxis → profile → Appearance → Font).
 - Caps Lock → Escape is applied automatically only on GNOME (`gsettings`). On
   Bazzite's default KDE, set it in System Settings → Keyboard → Advanced →
   "Caps Lock behavior".
-- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim tmux shell lazygit`.
+- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim shell lazygit`.

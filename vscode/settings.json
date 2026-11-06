@@ -515,10 +515,6 @@
       "path": "fish",
       "args": ["-l"],
     },
-    "tmux": {
-      "path": "tmux",
-      "icon": "terminal-tmux",
-    },
     "pwsh": {
       "path": "pwsh",
       "icon": "terminal-powershell",

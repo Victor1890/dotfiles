@@ -25,11 +25,3 @@ link_claude_profiles() {
     fi
   done
 }
-
-# Marketplace local de plugins (claude-mods/). settings.json lo referencia por
-# una ruta estable (~/.claude/mods) para no hardcodear dónde está clonado el repo.
-link_claude_mods() {
-  log "Linking claude-mods plugin marketplace at ${HOME}/.claude/mods…"
-  mkdir -p "${HOME}/.claude"
-  ln -sfn "${ROOT_DIR}/claude-mods" "${HOME}/.claude/mods"
-}

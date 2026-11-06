@@ -68,4 +68,4 @@ config), see [windows-host.md](windows-host.md).
 
 - `fd` and `bat` are installed as `fdfind`/`batcat` on Ubuntu; the bootstrap adds
   `fd`/`bat` convenience symlinks.
-- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim tmux shell lazygit`.
+- To re-apply config after pulling changes: `cd ~/dotfiles && stow -R bash git starship nvim shell lazygit`.

@@ -19,22 +19,19 @@ repo entero.
 | Estructura del repo / aplicar dotfiles con Stow | `docs/shell-and-dotfiles.md` |
 | bash, prompt, aliases o funciones | `docs/shell-and-dotfiles.md` + `bash/.config/bash/*.sh` |
 | nvim (LazyVim) | `docs/nvim.md` |
-| tmux | `docs/tmux.md` |
-| herdr, `nih` | `docs/herdr.md` |
 | git / ssh | `docs/git-and-ssh.md` |
 | lazygit | `docs/lazygit.md` |
 | VS Code | `docs/vscode.md` |
 | Claude Code (settings, agentes, skills, hooks) | `docs/claude-code.md` |
 | opencode (modelo, agentes, permisos) | `docs/opencode.md` |
 | Node.js | `docs/nodejs.md` |
-| CoolerControl (perfiles de temperatura, API) | `docs/coolercontrol-api.md` (inglés) |
 | Setup de una plataforma concreta | `docs/{ubuntu-wsl,bazzite,omarchy,macos-setup}.md` |
 | Apps/Windows Terminal nativos en Windows (host, no WSL) | `docs/windows-host.md` |
 
 ## Dónde editar
 
 - **Config de una herramienta**: su paquete Stow, espejando la ruta de `$HOME`
-  (p.ej. `tmux/.config/tmux/tmux.conf`, `git/.gitconfig`).
+  (p.ej. `lazygit/.config/lazygit/config.yml`, `git/.gitconfig`).
 - **bash** (modular): `~/.bashrc` carga `~/.config/bash/*.sh`
   (`exports`, `path`, `plugins`, `completion`, `history`, `aliases`,
   `functions`, `integrations`, `git`).

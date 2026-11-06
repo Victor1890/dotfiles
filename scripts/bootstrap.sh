@@ -6,7 +6,7 @@ set -euo pipefail
 #
 # Este script es solo el orquestador: detecta el OS y llama, en orden, a los
 # pasos instalables/opcionales, cada uno en su propio archivo bajo
-# scripts/modules/ (stow, herdr, perfiles de Claude, CoolerControl, teclado,
+# scripts/modules/ (stow, perfiles de Claude, teclado,
 # .wslconfig, lazygit en macOS, node). Las utilidades genéricas que
 # esos módulos comparten (log, os_detect, backup_if_real…) viven en
 # scripts/lib/. Añadir un paso nuevo es: crear su módulo y llamarlo en main().
@@ -50,9 +50,7 @@ main() {
   log "OS detectado: ${OS}"
 
   # Paquete solo-Omarchy: hook de OpenRGB (RGB sync con el tema) + autostart de hypr.
-  # coolercontrol: perfiles/modos de temperatura + watcher que cambia de modo
-  # según las ventanas abiertas (ver docs/omarchy.md).
-  [[ "${OS}" == "omarchy" ]] && STOW_PACKAGES+=(omarchy coolercontrol)
+  [[ "${OS}" == "omarchy" ]] && STOW_PACKAGES+=(omarchy)
 
   # Solo macOS: zsh es el login shell (Oh My Zsh); git-macos trae los overrides de git.
   [[ "${OS}" == "macos" ]] && STOW_PACKAGES+=(zsh git-macos)
@@ -78,13 +76,10 @@ main() {
 
   ensure_locale
   ensure_stow
-  ensure_herdr
   ensure_opencode
   stow_packages
   sync_opencode_skills
   link_claude_profiles
-  link_claude_mods
-  ensure_coolercontrol_profiles
 
   # Node antes del sync para que Mason pueda instalar el LSP de TypeScript.
   ensure_node
@@ -131,7 +126,6 @@ main() {
   # Diagnóstico de arranque (solo Linux; avisos, nunca bloquea).
   [[ "${OS}" != "macos" ]] && bash "${SCRIPT_DIR}/boot-health.sh" || true
 
-  report_coolercontrol_issues
   final_shell_hint
 }
 

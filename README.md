@@ -19,7 +19,7 @@ Cross-platform dotfiles for **Ubuntu/WSL**, **Fedora/Bazzite**, **Arch/Omarchy**
 
 Most top-level folders are a Stow *package*: running `stow <package>` symlinks
 its contents into `$HOME`, preserving the internal directory layout.
-`packages/`, `scripts/`, `docs/`, `system/` and `claude-mods/` are the exceptions — plain
+`packages/`, `scripts/`, `docs/`, and `system/` are the exceptions — plain
 utility/reference dirs, not linked by Stow.
 
 ```
@@ -28,11 +28,9 @@ dotfiles/
 ├── starship/       # .config/starship.toml (prompt)
 ├── git/            # .gitconfig + .config/git/ignore
 ├── nvim/           # .config/nvim/ (LazyVim distribution)
-├── tmux/           # .config/tmux/tmux.conf
 ├── lazygit/        # .config/lazygit/config.yml (terminal UI for git)
 ├── shell/          # .profile
 ├── claude/         # .claude/ (Claude Code settings, agents, global CLAUDE.md; shared across profiles)
-├── claude-mods/    # local Claude Code plugin marketplace, referenced by path from claude/.claude/settings.json
 ├── opencode/       # .config/opencode/ (opencode v2: model, agents, permissions, plugins, global AGENTS.md)
 ├── vscode/         # settings.json (symlinked per-OS by a script)
 ├── wsl/            # .wslconfig (copied to the Windows profile on WSL)
@@ -83,7 +81,7 @@ To link (or unlink) individual packages yourself:
 
 ```sh
 cd ~/dotfiles
-stow bash git starship nvim tmux herdr shell lazygit claude opencode   # link everything
+stow bash git starship nvim shell lazygit claude opencode   # link everything
 stow nvim                                    # link just one package
 stow -D nvim                                 # unlink (remove symlinks)
 stow -R bash                                  # restow (refresh) after changes
@@ -127,7 +125,6 @@ Step-by-step guides for a fresh machine live in [`docs/`](docs):
 | [nodejs.md](docs/nodejs.md) | Node.js via nvm and global modules |
 | [vscode.md](docs/vscode.md) | VS Code settings and extensions |
 | [nvim.md](docs/nvim.md) | Neovim (LazyVim) setup, requirements and basics |
-| [tmux.md](docs/tmux.md) | tmux prefix, panes/windows and copy mode |
 | [lazygit.md](docs/lazygit.md) | lazygit keybindings and workflows |
 | [claude-code.md](docs/claude-code.md) | Claude Code profiles, agents, skills, hooks and token costs |
 | [opencode.md](docs/opencode.md) | opencode v2 config: MiMo model, agents, permissions, plugins, gotchas |
