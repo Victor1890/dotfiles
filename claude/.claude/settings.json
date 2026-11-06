@@ -73,6 +73,16 @@
             "command": "bash \"$HOME/.claude/hooks/load-agents-md.sh\""
           }
         ]
+      },
+      {
+        "matcher": "^(startup|resume)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/cleanup-wt.mjs\" --auto",
+            "timeout": 15
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -103,7 +113,7 @@
         ]
       },
       {
-        "matcher": "Bash|Read|Grep",
+        "matcher": "Bash|Read|Grep|Write|Edit|MultiEdit|NotebookEdit",
         "hooks": [
           {
             "type": "command",
@@ -120,11 +130,29 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/guard-secrets.py\""
+          }
+        ]
+      }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"$HOME/.claude/hooks/statusline.sh\""
   },
   "enabledPlugins": {
     "mattpocock-skills@claude-plugins-official": true,
-    "caveman@caveman": true
+    "caveman@caveman": true,
+    "am-context-bar@claude-am-mods": true,
+    "image-preview@better-claude": true,
+    "quick-peek@better-claude": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -132,6 +160,19 @@
         "source": "github",
         "repo": "JuliusBrussee/caveman"
       }
+    },
+    "claude-am-mods": {
+      "source": {
+        "source": "github",
+        "repo": "romnycristopher/claude-am-mods"
+      }
+    },
+    "better-claude": {
+      "source": {
+        "source": "github",
+        "repo": "midudev/better-claude"
+      },
+      "autoUpdate": true
     }
   },
   "modelSettings": {
